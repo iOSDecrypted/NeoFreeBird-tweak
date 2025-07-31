@@ -66,7 +66,7 @@ Available options:
 ./build.sh --sideloaded
 ```
 
-Result: `NeoFreeBird-BHTwitter-sideloaded.ipa` inside `packages`.
+Result: `NeoFreeBird-sideloaded.ipa` inside `packages`.
 
 ## Build for TrollStore
 
@@ -76,7 +76,7 @@ Follow the same steps as sideloading, then run:
 ./build.sh --trollstore
 ```
 
-Result: `NeoFreeBird-BHTwitter-trollstore.tipa` inside `packages`.
+Result: `NeoFreeBird-trollstore.tipa` inside `packages`.
 
 ## Build for Rootless Jailbreaks
 
