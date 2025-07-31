@@ -20,8 +20,8 @@ these builds are considered beta. even though they should work fine. you may run
 3. Clone the NeoFreeBird-BHTwitter repository:
 
 ```bash
-git clone --recursive https://github.com/actuallyaridan/NeoFreeBird-BHTwitter
-cd NeoFreeBird-BHTwitter
+git clone --recursive https://github.com/NeoFreeBird/tweak
+cd tweak
 ```
 
 4. Make the build script executable:
