@@ -210,8 +210,8 @@
 "STOP_HIDING_TAB_BAR_TITLE" = "Keep the navigation bar visible";
 "STOP_HIDING_TAB_BAR_DETAIL_TITLE" = "Don't fade the navigation bar when you scroll.";
 
-"CLASSIC_TAB_BAR_SETTINGS_TITLE" = "Classic navigation bar";
-"CLASSIC_TAB_BAR_SETTINGS_DETAIL" = "Applies your accent color to the currently selected navigation item.";
+"CLASSIC_TAB_BAR_SETTINGS_TITLE" = "Classic tab bar";
+"CLASSIC_TAB_BAR_SETTINGS_DETAIL" = "Applies your accent color to the currently selected tab item.";
 
 "DISABLE_RTL_OPTION_TITLE" = "Use left-to-right layout";
 "DISABLE_RTL_OPTION_DETAIL_TITLE" = "Force a a left-to-right layout, even for languages that are read from right-to-left.";
@@ -322,8 +322,8 @@
 "CLASSIC_TAB_BAR_DISABLED_NOTIFICATION_NAME" = "BHTClassicTabBarSettingChangedNotification";
 
 /* Restore tab labels */
-"RESTORE_TAB_LABELS_TITLE" = "Navigation labels";
-"RESTORE_TAB_LABELS_DETAIL" = "Show labels under icons in the navigation bar like legacy Twitter versions.";
+"RESTORE_TAB_LABELS_TITLE" = "Tab labels";
+"RESTORE_TAB_LABELS_DETAIL" = "Show labels under icons in the tab bar.";
 
 /*Message customization*/
 "CUSTOM_DIRECT_BACKGROUND_ALERT_OPTION_1" = "Use an image";
@@ -372,6 +372,6 @@
 "MODERN_SETTINGS_MESSAGES_SUBTITLE" = "Customize your Twitter messaging experience.";
 
 "MODERN_SETTINGS_EXPERIMENTAL_TITLE" = "Labs";
-"MODERN_SETTINGS_EXPERIMENTAL_SUBTITLE" = "Try unstable features.";
+"MODERN_SETTINGS_EXPERIMENTAL_SUBTITLE" = "Try features we're currently testing.";
 
 "MODERN_SETTINGS_PLACEHOLDER_TEXT" = "Nothing to see here - yet.";
