@@ -4,8 +4,7 @@ the ultimate way to tweak your Twitter/X experience.
 > Forked from [BHTwitter](https://github.com/BandarHL/BHTwitter).
 
 ## Disclaimer: 
-these builds are considered beta. even though they should work fine. you may run into some issues.
-currently we're building it against Twitter/X v10.94. recent versions may have issues that havent been fixed yet.
+these builds are considered beta. even though they should work fine. you may run into some unintended issues, especially with untested twitter/x versions.
 
 | | | |
 |:-------------------------:|:-------------------------:|:-------------------------:|
@@ -21,8 +20,8 @@ currently we're building it against Twitter/X v10.94. recent versions may have i
 3. Clone the NeoFreeBird-BHTwitter repository:
 
 ```bash
-git clone --recursive https://github.com/actuallyaridan/NeoFreeBird-BHTwitter
-cd NeoFreeBird-BHTwitter
+git clone --recursive https://github.com/NeoFreeBird/tweak
+cd tweak
 ```
 
 4. Make the build script executable:
@@ -67,7 +66,7 @@ Available options:
 ./build.sh --sideloaded
 ```
 
-Result: `NeoFreeBird-BHTwitter-sideloaded.ipa` inside `packages`.
+Result: `NeoFreeBird-sideloaded.ipa` inside `packages`.
 
 ## Build for TrollStore
 
@@ -77,7 +76,7 @@ Follow the same steps as sideloading, then run:
 ./build.sh --trollstore
 ```
 
-Result: `NeoFreeBird-BHTwitter-trollstore.tipa` inside `packages`.
+Result: `NeoFreeBird-trollstore.tipa` inside `packages`.
 
 ## Build for Rootless Jailbreaks
 
