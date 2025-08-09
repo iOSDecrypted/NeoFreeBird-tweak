@@ -7,4 +7,4 @@ Maintainer: NeoFreeBird
 Author: NeoFreeBird
 Section: Tweaks
 Depends: mobilesubstrate, ws.hbang.common
-Conflicts: com.den.twigalaxy, xyz.cypwn.twigalaxy, com.bandarhl.bhtwitter
+Conflicts: com.den.twigalaxy, xyz.cypwn.twigalaxy, com.bandarhl.bhtwitter, xyz.cypwn.bhtwitter, com.netskao.twitternoads, xyz.cypwn.bringbacktwitter
