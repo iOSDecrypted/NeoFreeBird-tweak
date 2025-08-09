@@ -557,8 +557,8 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 - (void)setupDeveloperCells {
     self.developerCells = @[
         @{ @"title": @"aridan", @"username": @"actuallyaridan", @"avatarURL": @"https://unavatar.io/x/actuallyaridan", @"userID": @"1351218086649720837" },
-        @{ @"title": @"timi2506", @"username": @"timi2506", @"avatarURL": @"https://unavatar.io/x/timi2506", @"userID": @"1671731225424195584" },
-        @{ @"title": @"nyathea", @"username": @"nyaathea", @"avatarURL": @"https://unavatar.io/x/nyaathea", @"userID": @"1541742676009226241" },
+        @{ @"title": @"timi2506", @"username": @"timi2506", @"avatarURL": @"https://unavatar.io/github/timi2506", @"userID": @"1671731225424195584" },
+        @{ @"title": @"thea", @"username": @"nyaathea", @"avatarURL": @"https://unavatar.io/github/nyathea", @"userID": @"1541742676009226241" },
         @{ @"title": @"BandarHelal", @"username": @"BandarHL", @"avatarURL": @"https://unavatar.io/x/BandarHL", @"userID": @"827842200708853762" },
         @{ @"title": @"NeoFreeBird", @"username": @"NeoFreeBird", @"avatarURL": @"https://unavatar.io/x/NeoFreeBird", @"userID": @"1878595268255297537" }
     ];
