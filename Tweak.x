@@ -301,9 +301,6 @@ static void batchSwizzlingOnClass(Class cls, NSArray<NSString*>*origSelectors, I
 - (_Bool)application:(UIApplication *)application didFinishLaunchingWithOptions:(id)arg2 {
     _Bool orig = %orig;
     
-    // Remove the animation trigger entirely since it causes black screen
-    // We'll rely solely on our hook to launchTransitionProvider to create the provider
-    // and our hook to setBlueBackgroundView to ensure correct color
     
     if (![[NSUserDefaults standardUserDefaults] objectForKey:@"FirstRun_4.3"]) {
         [[NSUserDefaults standardUserDefaults] setValue:@"1strun" forKey:@"FirstRun_4.3"];
@@ -316,6 +313,19 @@ static void batchSwizzlingOnClass(Class cls, NSArray<NSString*>*origSelectors, I
         [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"disableSensitiveTweetWarnings"];
         [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"disable_immersive_player"];
         [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"custom_voice_upload"];
+        [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"hide_premium_offer"];
+        [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"disableMediaTab"];
+        [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"disableArticles"];
+        [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"disableHighlights"];
+        [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"hide_view_count"];
+        [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"hide_grok_analyze"];
+        [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"restore_reply_context"];
+        [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"disable_xchat"];
+        [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"hide_topics"];
+        [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"hide_topics_to_follow"];
+        [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"hide_who_to_follow"];
+        [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"no_tab_bar_hiding"];
+
     }
     [BHTManager cleanCache];
     if ([BHTManager FLEX]) {
