@@ -359,7 +359,7 @@
 "MODERN_SETTINGS_LAYOUT_TITLE" = "General";
 "MODERN_SETTINGS_LAYOUT_SUBTITLE" = "Make your timeline yours with custom fonts, navigation bar theming, and much more.";
 
-"MODERN_SETTINGS_MEDIA_TITLE" = "Photos & Videos";
+"MODERN_SETTINGS_MEDIA_TITLE" = "Photos & videos";
 "MODERN_SETTINGS_MEDIA_SUBTITLE" = "Download videos, enable video timestamps, and more.";
 
 "MODERN_SETTINGS_TWITTER_BLUE_TITLE" = "Twitter Blue";
@@ -377,7 +377,7 @@
 "MODERN_SETTINGS_EXPERIMENTAL_TITLE" = "Labs";
 "MODERN_SETTINGS_EXPERIMENTAL_SUBTITLE" = "Try features we're currently testing.";
 
-"SPECIAL_THANKS_SECTION_HEADER_TITLE" = "Special Thanks";
-"FOLLOW_OFFICIAL_PAGE_SECTION_HEADER_TITLE" = "Follow our Page";
+"SPECIAL_THANKS_SECTION_HEADER_TITLE" = "Special thanks";
+"FOLLOW_OFFICIAL_PAGE_SECTION_HEADER_TITLE" = "Follow NeoFreeBird";
 
 "MODERN_SETTINGS_PLACEHOLDER_TEXT" = "Nothing to see here.";

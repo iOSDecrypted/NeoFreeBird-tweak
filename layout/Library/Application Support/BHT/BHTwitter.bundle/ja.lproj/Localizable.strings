@@ -9,11 +9,14 @@
 /*Alerts and popups*/
 "RESTART_REQUIRED_ALERT_TITLE" = "再起動が必要です";
 "RESTART_REQUIRED_ALERT_MESSAGE_CLASSIC_TAB_BAR_GENERIC" = "この変更を反映するには、Twitterを再起動する必要があります。";
-"RESTART_REQUIRED_ALERT_MESSAGE_SQUARE_AVATARS" = "この変更を適用するには、アプリを再起動する必要があります。";
+"RESTART_REQUIRED_ALERT_MESSAGE_SQUARE_AVATARS" = "この変更を適用させるには、Twitterを再起動する必要があります";
 "RESTART_REQUIRED_ALERT_MESSAGE_GENERIC" = "この変更を反映するには、Twitterを再起動する必要があります。";
 "RESTART_REQUIRED_ALERT_MESSAGE_NAVBAR" = "この変更を反映するには、Twitterを再起動する必要があります。";
-"RESTART_NOW_BUTTON_TITLE" = "今すぐアプリを再起動";
-"MODERN_LAYOUT_RESTART_MESSAGE" = "モダンレイアウトとクラシックレイアウトを切り替えるには、アプリを再起動する必要があります。";
+"RESTART_NOW_BUTTON_TITLE" = "再起動";
+"MODERN_LAYOUT_RESTART_MESSAGE" = "古いレイアウトと新しいレイアウトを切り替えるには、Twitterを再起動する必要があります";
+
+"RESET_COMPLETE_TITLE" = "背景をリセットしました";
+"BACKGROUND_RESET_MESSAGE" = "背景をTwitterのデフォルトにリセットしました。";
 
 "CONFIRM_ALERT_MESSAGE" = "続行しますか？";
 "YES_BUTTON_TITLE" = "はい";
@@ -23,8 +26,8 @@
 "SAVE_BUTTON_TITLE" = "保存";
 
 /*Main menu start*/
-
 /*General*/
+
 "MAIN_SECTION_HEADER_TITLE" = "一般";
 
 "UPLOAD_CUSTOM_VOICE_OPTION_TITLE" = "音声ツイート";
@@ -210,8 +213,8 @@
 "STOP_HIDING_TAB_BAR_TITLE" = "ナビゲーションバーを常に表示";
 "STOP_HIDING_TAB_BAR_DETAIL_TITLE" = "スクロールしてもナビゲーションバーが消えないようにします。";
 
-"CLASSIC_TAB_BAR_SETTINGS_TITLE" = "クラシックタブバー";
-"CLASSIC_TAB_BAR_SETTINGS_DETAIL" = "現在選択されているタブにアクセントカラーを適用します。";
+"CLASSIC_TAB_BAR_SETTINGS_TITLE" = "新しいタブバー";
+"CLASSIC_TAB_BAR_SETTINGS_DETAIL" = "現在選択されているタブ項目にアクセントカラーを適用します。";
 
 "DISABLE_RTL_OPTION_TITLE" = "左から右へのレイアウトを使用";
 "DISABLE_RTL_OPTION_DETAIL_TITLE" = "右から左に読む言語の場合でも、左から右へのレイアウトを強制します。";
@@ -251,9 +254,9 @@
 
 
 /*Main menu end*/
-
-
 /*Custom fonts*/
+
+
 "CUSTOM_FONTS_NAVIGATION_BUTTON_TITLE" = "カスタムフォント";
 "CUSTOM_FONTS_NAVIGATION_TITLE" = "フォントを選択";
 "CUSTOM_FONTS_MENU_TITLE" = "\nフォントを選択";
@@ -322,8 +325,8 @@
 "CLASSIC_TAB_BAR_DISABLED_NOTIFICATION_NAME" = "BHTClassicTabBarSettingChangedNotification";
 
 /* Restore tab labels */
-"RESTORE_TAB_LABELS_TITLE" = "タブラベルを復元";
-"RESTORE_TAB_LABELS_DETAIL" = "以前のTwitterのように、タブバーアイコンの下にラベルを表示します。";
+"RESTORE_TAB_LABELS_TITLE" = "タブのラベル";
+"RESTORE_TAB_LABELS_DETAIL" = "タブバーのアイコンの下にラベルを表示します。";
 
 /*Message customization*/
 "CUSTOM_DIRECT_BACKGROUND_ALERT_OPTION_1" = "画像を使用";
@@ -354,24 +357,27 @@
 /*Modern Settings Layout*/
 
 "MODERN_SETTINGS_LAYOUT_TITLE" = "一般";
-"MODERN_SETTINGS_LAYOUT_SUBTITLE" = "カスタムフォント、ナビゲーションバーのテーマ、その他のオプションを使用して、タイムラインを自分好みにカスタマイズできます。";
+"MODERN_SETTINGS_LAYOUT_SUBTITLE" = "カスタムフォント、ナビゲーションバーのテーマなど、その他のオプションを使用してタイムラインを自分好みにカスタマイズできます。";
 
-"MODERN_SETTINGS_MEDIA_TITLE" = "メディアとダウンロード";
-"MODERN_SETTINGS_MEDIA_SUBTITLE" = "動画のダウンロード、4Kアップロードの有効化、その他の改善。";
+"MODERN_SETTINGS_MEDIA_TITLE" = "写真と動画";
+"MODERN_SETTINGS_MEDIA_SUBTITLE" = "動画のダウンロード、タイムスタンプの有効化など。";
 
 "MODERN_SETTINGS_TWITTER_BLUE_TITLE" = "Twitter Blue";
-"MODERN_SETTINGS_TWITTER_BLUE_SUBTITLE" = "広告の非表示、ツイートの取り消し、テーマ、カスタムアプリアイコンなどのTwitter Blue機能のロックを解除しましょう";
+"MODERN_SETTINGS_TWITTER_BLUE_SUBTITLE" = "広告の非表示、ツイートの取り消し、テーマ、カスタムアプリアイコンなどのTwitter Blue機能のロックを解除しましょう。";
 
 "MODERN_SETTINGS_PROFILES_TITLE" = "プロフィール";
-"MODERN_SETTINGS_PROFILES_SUBTITLE" = "プロフィールに表示する内容や操作方法を自由にカスタマイズできます。";
+"MODERN_SETTINGS_PROFILES_SUBTITLE" = "ユーザープロフィールに表示されるものを変更します。";
 
 "MODERN_SETTINGS_TWEETS_TITLE" = "ツイートと返信";
-"MODERN_SETTINGS_TWEETS_SUBTITLE" = "ツイートの外観を変更し、ソースラベルなどの昔の機能を復活させます。";
+"MODERN_SETTINGS_TWEETS_SUBTITLE" = "ツイートの外観を変更し、使用しない可能性のある機能を削除します。";
 
 "MODERN_SETTINGS_MESSAGES_TITLE" = "ダイレクトメッセージ";
 "MODERN_SETTINGS_MESSAGES_SUBTITLE" = "Twitterのメッセージ機能をカスタマイズします。";
 
 "MODERN_SETTINGS_EXPERIMENTAL_TITLE" = "実験的機能";
-"MODERN_SETTINGS_EXPERIMENTAL_SUBTITLE" = "不安定になる可能性がある機能を試してください。";
+"MODERN_SETTINGS_EXPERIMENTAL_SUBTITLE" = "現在テスト中の機能をお試しください。";
 
-"MODERN_SETTINGS_PLACEHOLDER_TEXT" = "まだ表示するものはありません。";
+"SPECIAL_THANKS_SECTION_HEADER_TITLE" = "謝辞";
+"FOLLOW_OFFICIAL_PAGE_SECTION_HEADER_TITLE" = "私たちをフォロー";
+
+"MODERN_SETTINGS_PLACEHOLDER_TEXT" = "ここには何もありません。";
