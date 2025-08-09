@@ -1349,13 +1349,41 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 // ==============================
 // MessagesSettingsViewController
 // ==============================
-@interface MessagesSettingsViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface MessagesSettingsViewController () <UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIColorPickerViewControllerDelegate>
 @property (nonatomic, strong) TFNTwitterAccount *account;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray<NSDictionary *> *settings;
 @end
 
 @implementation MessagesSettingsViewController
+
+#pragma mark - Image Picker Delegate
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *)info {
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSString *docPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+    NSURL *oldImgPath = info[UIImagePickerControllerImageURL];
+    NSURL *newImgPath = [[NSURL fileURLWithPath:docPath] URLByAppendingPathComponent:@"msg_background.png"];
+    
+    if ([manager fileExistsAtPath:newImgPath.path]) {
+        [manager removeItemAtURL:newImgPath error:nil];
+    }
+    [manager copyItemAtURL:oldImgPath toURL:newImgPath error:nil];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"change_msg_background"];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"background_image"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"background_color"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Color Picker Delegate
+- (void)colorPickerViewControllerDidSelectColor:(UIColorPickerViewController *)viewController {
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"change_msg_background"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"background_image"];
+    [[NSUserDefaults standardUserDefaults] setObject:viewController.selectedColor.hexString forKey:@"background_color"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
 
 - (instancetype)initWithAccount:(TFNTwitterAccount *)account {
     if ((self = [super init])) {
