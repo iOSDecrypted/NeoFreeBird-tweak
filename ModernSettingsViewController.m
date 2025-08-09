@@ -436,6 +436,13 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 // MARK: - Main Settings Page
 // ======================================================
 
+@interface ModernSettingsViewController () <UITableViewDataSource, UITableViewDelegate>
+@property (nonatomic, strong) TFNTwitterAccount *account;
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSArray *sections;
+@property (nonatomic, strong) NSArray *developerCells;
+@end
+
 @implementation ModernSettingsViewController
 
 - (instancetype)initWithAccount:(TFNTwitterAccount *)account {
