@@ -4043,3 +4043,9 @@ static NSBundle *BHBundle() {
         }
     }
 %end
+
+%hook GrokTranslateButtonViewConfig
+- (BOOL)showInfoButtonForTranslated {
+   return false;
+}
+%end
