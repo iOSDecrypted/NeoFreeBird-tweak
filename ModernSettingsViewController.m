@@ -495,7 +495,7 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     } 
     else if (section == 3) {
         // Official Page section header
-        return [self headerViewWithTitle:@"Follow the Official Page"];
+        return [self headerViewWithTitle:@"Follow our Page"];
     }
     return nil;
 }
@@ -594,8 +594,8 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 - (void)setupDeveloperCells {
     self.developerCells = @[
         @{ @"title": @"aridan", @"username": @"actuallyaridan", @"avatarURL": @"https://unavatar.io/x/actuallyaridan", @"userID": @"1351218086649720837" },
-        @{ @"title": @"timi2506", @"username": @"timi2506", @"avatarURL": @"https://unavatar.io/x/timi2506", @"userID": @"1671731225424195584" },
-        @{ @"title": @"nyathea", @"username": @"nyaathea", @"avatarURL": @"https://unavatar.io/x/nyaathea", @"userID": @"1541742676009226241" }
+        @{ @"title": @"timi2506", @"username": @"timi2506", @"avatarURL": @"https://unavatar.io/github/timi2506", @"userID": @"1671731225424195584" },
+        @{ @"title": @"nyathea", @"username": @"nyaathea", @"avatarURL": @"https://unavatar.io/github/nyathea", @"userID": @"1541742676009226241" }
     ];
     
     self.specialThanksCells = @[
@@ -801,18 +801,34 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
     if (indexPath.section == 0) {
         NSDictionary *sectionData = self.sections[indexPath.row];
         NSString *action = sectionData[@"action"];
         if ([self respondsToSelector:NSSelectorFromString(action)]) {
             [self performSelector:NSSelectorFromString(action)];
         }
-    } else {
-        NSDictionary *developer = self.developerCells[indexPath.row];
-        NSString *userID = developer[@"userID"];
-        NSString *twitterURL = [NSString stringWithFormat:@"twitter://user?id=%@", userID];
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:twitterURL] options:@{} completionHandler:nil];
     }
+    else if (indexPath.section == 1) {
+        NSDictionary *developer = self.developerCells[indexPath.row];
+        [self openTwitterProfileWithUserID:developer[@"userID"]];
+    }
+    else if (indexPath.section == 2) {
+        NSDictionary *developer = self.specialThanksCells[indexPath.row];
+        [self openTwitterProfileWithUserID:developer[@"userID"]];
+    }
+    else if (indexPath.section == 3) {
+        NSDictionary *developer = self.officialPageCells[indexPath.row];
+        [self openTwitterProfileWithUserID:developer[@"userID"]];
+    }
+}
+
+- (void)openTwitterProfileWithUserID:(NSString *)userID {
+    if (!userID.length) return;
+    NSString *twitterURL = [NSString stringWithFormat:@"twitter://user?id=%@", userID];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:twitterURL]
+                                       options:@{}
+                             completionHandler:nil];
 }
 
 #pragma mark - Navigation to Sub-pages
