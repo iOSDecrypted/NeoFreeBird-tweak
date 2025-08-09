@@ -15,6 +15,9 @@
 "RESTART_NOW_BUTTON_TITLE" = "Restart";
 "MODERN_LAYOUT_RESTART_MESSAGE" = "To switch between the modern and classic layouts, you need to restart Twitter";
 
+"RESET_COMPLETE_TITLE" = "Reset background sucessfully";
+"BACKGROUND_RESET_MESSAGE" = "Background has been reset to twitter default.";
+
 "CONFIRM_ALERT_MESSAGE" = "Sure you meant to do that?";
 "YES_BUTTON_TITLE" = "Yes";
 "NO_BUTTON_TITLE" = "No";
