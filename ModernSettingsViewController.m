@@ -426,6 +426,98 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 
 @implementation ModernSettingsViewController
 
+#pragma mark - Section Headers
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if (section == 0) {
+        // Top subtitle header
+        UIView *headerView = [[UIView alloc] init];
+        headerView.backgroundColor = [BHDimPalette currentBackgroundColor];
+        
+        UILabel *subtitleLabel = [[UILabel alloc] init];
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        subtitleLabel.text = [[BHTBundle sharedBundle] localizedStringForKey:@"BHTWITTER_SETTINGS_DETAIL"];
+        subtitleLabel.numberOfLines = 0;
+        subtitleLabel.textAlignment = NSTextAlignmentLeft;
+        
+        id fontGroup = [objc_getClass("TAEStandardFontGroup") sharedFontGroup];
+        subtitleLabel.font = [fontGroup performSelector:@selector(subtext2Font)];
+        
+        Class TAEColorSettingsCls = objc_getClass("TAEColorSettings");
+        id settings = [TAEColorSettingsCls sharedSettings];
+        id currentPalette = [settings currentColorPalette];
+        id colorPalette = [currentPalette colorPalette];
+        UIColor *subtitleColor = [colorPalette performSelector:@selector(tabBarItemColor)];
+        subtitleLabel.textColor = subtitleColor;
+        
+        [headerView addSubview:subtitleLabel];
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [subtitleLabel.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor constant:20],
+            [subtitleLabel.trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor constant:-20],
+            [subtitleLabel.topAnchor constraintEqualToAnchor:headerView.topAnchor constant:16],
+            [subtitleLabel.bottomAnchor constraintEqualToAnchor:headerView.bottomAnchor constant:-16]
+        ]];
+        
+        return headerView;
+    } else if (section == 1) {
+        // Developer section header
+        UIView *headerView = [[UIView alloc] init];
+        headerView.backgroundColor = [BHDimPalette currentBackgroundColor];
+        
+        UILabel *titleLabel = [[UILabel alloc] init];
+        titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        titleLabel.text = [[BHTBundle sharedBundle] localizedStringForKey:@"DEVELOPER_SECTION_HEADER_TITLE"];
+        
+        id fontGroup = [objc_getClass("TAEStandardFontGroup") sharedFontGroup];
+        titleLabel.font = [fontGroup performSelector:@selector(headline1BoldFont)];
+        
+        Class TAEColorSettingsCls = objc_getClass("TAEColorSettings");
+        id settings = [TAEColorSettingsCls sharedSettings];
+        id currentPalette = [settings currentColorPalette];
+        id colorPalette = [currentPalette colorPalette];
+        UIColor *titleColor = [colorPalette performSelector:@selector(textColor)];
+        titleLabel.textColor = titleColor;
+        
+        [headerView addSubview:titleLabel];
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [titleLabel.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor constant:20],
+            [titleLabel.trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor constant:-20],
+            [titleLabel.topAnchor constraintEqualToAnchor:headerView.topAnchor constant:32],
+            [titleLabel.bottomAnchor constraintEqualToAnchor:headerView.bottomAnchor constant:-16]
+        ]];
+        
+        return headerView;
+    }
+    return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if (section == 0 || section == 1) {
+        return UITableViewAutomaticDimension;
+    }
+    return 0;
+}
+
+#pragma mark - Section Footers
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    if (section == 0) {
+        UIView *separator = [[UIView alloc] initWithFrame:CGRectZero];
+        separator.backgroundColor = [UIColor separatorColor];
+        return separator;
+    }
+    return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    if (section == 0) {
+        return 1.0 / UIScreen.mainScreen.scale;
+    }
+    return CGFLOAT_MIN;
+}
+
 - (instancetype)initWithAccount:(TFNTwitterAccount *)account {
     self = [super init];
     if (self) {
