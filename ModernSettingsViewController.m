@@ -436,13 +436,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 // MARK: - Main Settings Page
 // ======================================================
 
-@interface ModernSettingsViewController () <UITableViewDataSource, UITableViewDelegate>
-@property (nonatomic, strong) TFNTwitterAccount *account;
-@property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSArray *sections;
-@property (nonatomic, strong) NSArray *developerCells;
-@end
-
 @implementation ModernSettingsViewController
 
 - (instancetype)initWithAccount:(TFNTwitterAccount *)account {
@@ -480,6 +473,250 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
            @"icon": @"flask", @"action": @"showExperimentalSettings" }
     ];
 }
+
+- (void)setupDeveloperCells {
+    self.developerCells = @[
+        @{ @"title": @"aridan", @"username": @"actuallyaridan", @"avatarURL": @"https://unavatar.io/x/actuallyaridan", @"userID": @"1351218086649720837" },
+        @{ @"title": @"timi2506", @"username": @"timi2506", @"avatarURL": @"https://unavatar.io/x/timi2506", @"userID": @"1671731225424195584" },
+        @{ @"title": @"nyathea", @"username": @"nyaathea", @"avatarURL": @"https://unavatar.io/x/nyaathea", @"userID": @"1541742676009226241" },
+        @{ @"title": @"BandarHelal", @"username": @"BandarHL", @"avatarURL": @"https://unavatar.io/x/BandarHL", @"userID": @"827842200708853762" },
+        @{ @"title": @"NeoFreeBird", @"username": @"NeoFreeBird", @"avatarURL": @"https://unavatar.io/x/NeoFreeBird", @"userID": @"1878595268255297537" }
+    ];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self setupNavigationBar];
+    [self setupTableView];
+    [self setupLayout];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(contentSizeCategoryDidChange:)
+                                                 name:UIContentSizeCategoryDidChangeNotification
+                                               object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)contentSizeCategoryDidChange:(NSNotification *)notification {
+    [self.tableView reloadData];
+}
+
+- (void)setupNavigationBar {
+    self.view.backgroundColor = [BHDimPalette currentBackgroundColor];
+    if (self.account) {
+        self.navigationItem.titleView = [objc_getClass("TFNTitleView") titleViewWithTitle:[[BHTBundle sharedBundle] localizedStringForKey:@"BHTWITTER_SETTINGS_TITLE"] subtitle:self.account.displayUsername];
+    } else {
+        self.title = [[BHTBundle sharedBundle] localizedStringForKey:@"BHTWITTER_SETTINGS_TITLE"];
+    }
+}
+
+- (void)setupTableView {
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    self.tableView.backgroundColor = [BHDimPalette currentBackgroundColor];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.estimatedRowHeight = 80;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.estimatedSectionHeaderHeight = 50;
+    self.tableView.sectionHeaderHeight = UITableViewAutomaticDimension;
+    [self.tableView registerClass:[ModernSettingsTableViewCell class] forCellReuseIdentifier:@"SettingsCell"];
+    [self.view addSubview:self.tableView];
+}
+
+- (void)setupLayout {
+    [NSLayoutConstraint activateConstraints:@[
+        [self.tableView.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor],
+        [self.tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+        [self.tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+        [self.tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
+    ]];
+}
+
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return (section == 0) ? self.sections.count : self.developerCells.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0) {
+        ModernSettingsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SettingsCell" forIndexPath:indexPath];
+        NSDictionary *sectionData = self.sections[indexPath.row];
+        [cell configureWithTitle:sectionData[@"title"] subtitle:sectionData[@"subtitle"] iconName:sectionData[@"icon"]];
+        return cell;
+    } else {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DeveloperCell"];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DeveloperCell"];
+            [self setupDeveloperCell:cell];
+        }
+        NSDictionary *developer = self.developerCells[indexPath.row];
+        [self configureDeveloperCell:cell withDeveloper:developer];
+        return cell;
+    }
+}
+
+#pragma mark - Developer Cell Setup
+
+- (void)setupDeveloperCell:(UITableViewCell *)cell {
+    cell.textLabel.text = nil;
+    cell.detailTextLabel.text = nil;
+    cell.imageView.image = nil;
+    
+    UIImageView *avatarImageView = [[UIImageView alloc] init];
+    avatarImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    avatarImageView.layer.cornerRadius = 26;
+    avatarImageView.clipsToBounds = YES;
+    avatarImageView.contentMode = UIViewContentModeScaleAspectFill;
+    avatarImageView.tag = 100;
+    [cell.contentView addSubview:avatarImageView];
+    
+    UILabel *nameLabel = [[UILabel alloc] init];
+    nameLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    nameLabel.tag = 101;
+    nameLabel.adjustsFontForContentSizeCategory = YES;
+    [cell.contentView addSubview:nameLabel];
+    
+    UILabel *usernameLabel = [[UILabel alloc] init];
+    usernameLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    usernameLabel.tag = 102;
+    usernameLabel.adjustsFontForContentSizeCategory = YES;
+    [cell.contentView addSubview:usernameLabel];
+    
+    UIImageView *devChevron = [[UIImageView alloc] init];
+    devChevron.translatesAutoresizingMaskIntoConstraints = NO;
+    devChevron.tag = 103;
+    devChevron.contentMode = UIViewContentModeScaleAspectFit;
+    [cell.contentView addSubview:devChevron];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [avatarImageView.leadingAnchor constraintEqualToAnchor:cell.contentView.leadingAnchor constant:20],
+        [avatarImageView.centerYAnchor constraintEqualToAnchor:cell.contentView.centerYAnchor],
+        [avatarImageView.widthAnchor constraintEqualToConstant:52],
+        [avatarImageView.heightAnchor constraintEqualToConstant:52],
+        
+        [nameLabel.leadingAnchor constraintEqualToAnchor:avatarImageView.trailingAnchor constant:12],
+        [nameLabel.trailingAnchor constraintEqualToAnchor:devChevron.leadingAnchor constant:-12],
+        [nameLabel.topAnchor constraintEqualToAnchor:cell.contentView.topAnchor constant:16],
+        
+        [usernameLabel.leadingAnchor constraintEqualToAnchor:nameLabel.leadingAnchor],
+        [usernameLabel.trailingAnchor constraintEqualToAnchor:devChevron.leadingAnchor constant:-12],
+        [usernameLabel.topAnchor constraintEqualToAnchor:nameLabel.bottomAnchor constant:2],
+        [usernameLabel.bottomAnchor constraintEqualToAnchor:cell.contentView.bottomAnchor constant:-16],
+        
+        [devChevron.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-20],
+        [devChevron.centerYAnchor constraintEqualToAnchor:cell.contentView.centerYAnchor],
+        [devChevron.widthAnchor constraintEqualToConstant:18],
+        [devChevron.heightAnchor constraintEqualToConstant:18]
+    ]];
+    
+    cell.backgroundColor = [BHDimPalette currentBackgroundColor];
+    cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+}
+
+- (void)configureDeveloperCell:(UITableViewCell *)cell withDeveloper:(NSDictionary *)developer {
+    UIImageView *avatarImageView = [cell.contentView viewWithTag:100];
+    UILabel *nameLabel = [cell.contentView viewWithTag:101];
+    UILabel *usernameLabel = [cell.contentView viewWithTag:102];
+    
+    id fontGroup = [objc_getClass("TAEStandardFontGroup") sharedFontGroup];
+    Class TAEColorSettingsCls = objc_getClass("TAEColorSettings");
+    id settings = [TAEColorSettingsCls sharedSettings];
+    id currentPalette = [settings currentColorPalette];
+    id colorPalette = [currentPalette colorPalette];
+    UIColor *textColor = [colorPalette performSelector:@selector(textColor)];
+    UIColor *subtitleColor = [colorPalette performSelector:@selector(tabBarItemColor)];
+    
+    nameLabel.text = developer[@"title"];
+    nameLabel.font = [fontGroup performSelector:@selector(bodyBoldFont)];
+    nameLabel.textColor = textColor;
+    
+    usernameLabel.text = [NSString stringWithFormat:@"@%@", developer[@"username"]];
+    usernameLabel.font = [fontGroup performSelector:@selector(subtext2Font)];
+    usernameLabel.textColor = subtitleColor;
+    
+    UIImageView *devChevron = [cell.contentView viewWithTag:103];
+    devChevron.image = [UIImage tfn_vectorImageNamed:@"chevron_right" fitsSize:CGSizeMake(18, 18) fillColor:subtitleColor];
+    
+    NSString *avatarURL = developer[@"avatarURL"];
+    if (avatarURL.length > 0) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:avatarURL]];
+            UIImage *img = [UIImage imageWithData:data];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                avatarImageView.image = img ?: [UIImage systemImageNamed:@"person.circle.fill"];
+            });
+        });
+    } else {
+        avatarImageView.image = [UIImage systemImageNamed:@"person.circle.fill"];
+    }
+}
+
+#pragma mark - UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (indexPath.section == 0) {
+        NSDictionary *sectionData = self.sections[indexPath.row];
+        NSString *action = sectionData[@"action"];
+        if ([self respondsToSelector:NSSelectorFromString(action)]) {
+            [self performSelector:NSSelectorFromString(action)];
+        }
+    } else {
+        NSDictionary *developer = self.developerCells[indexPath.row];
+        NSString *userID = developer[@"userID"];
+        NSString *twitterURL = [NSString stringWithFormat:@"twitter://user?id=%@", userID];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:twitterURL] options:@{} completionHandler:nil];
+    }
+}
+
+#pragma mark - Navigation to Sub-pages
+
+- (void)showLayoutSettings {
+    GeneralSettingsViewController *vc = [[GeneralSettingsViewController alloc] initWithAccount:self.account];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)showTwitterBlueSettings {
+    TwitterBlueSettingsViewController *vc = [[TwitterBlueSettingsViewController alloc] initWithAccount:self.account];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)showDownloadsSettings {
+    MediaDownloadsSettingsViewController *vc = [[MediaDownloadsSettingsViewController alloc] initWithAccount:self.account];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)showProfilesSettings {
+    ProfilesSettingsViewController *vc = [[ProfilesSettingsViewController alloc] initWithAccount:self.account];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)showTweetsSettings {
+    TweetsSettingsViewController *vc = [[TweetsSettingsViewController alloc] initWithAccount:self.account];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)showMessagesSettings {
+    MessagesSettingsViewController *vc = [[MessagesSettingsViewController alloc] initWithAccount:self.account];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)showExperimentalSettings {
+    ExperimentalSettingsViewController *vc = [[ExperimentalSettingsViewController alloc] initWithAccount:self.account];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+@end
 
 // ======================================================
 // MARK: - Twitter Blue Settings Page
