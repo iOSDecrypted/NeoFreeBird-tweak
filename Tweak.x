@@ -4059,7 +4059,7 @@ static NSBundle *BHBundle() {
    return true;
 }
 - (void)setIsFocal:(BOOL)focal {
-   %orig(true)
+   %orig(true);
 }
 %end
 
@@ -4068,7 +4068,7 @@ static NSBundle *BHBundle() {
    return true;
 }
 - (void)setIsFocal:(BOOL)focal {
-   %orig(true)
+   %orig(true);
 }
 
 %end
