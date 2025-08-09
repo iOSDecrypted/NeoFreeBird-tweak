@@ -495,7 +495,7 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     } 
     else if (section == 3) {
         // Official Page section header
-        return [self headerViewWithTitle:@"Follow our Page"];
+        return [self headerViewWithTitle:@"Follow Our Page"];
     }
     return nil;
 }
@@ -665,7 +665,7 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     footerLabel.translatesAutoresizingMaskIntoConstraints = NO;
     footerLabel.text = @"NeoFreeBird v2.0 (release)\nNeoFreeBird-BHTwitter v5.1 (release)";
     footerLabel.numberOfLines = 0;
-    footerLabel.textAlignment = NSTextAlignmentCenter;
+    footerLabel.textAlignment = NSTextAlignmentLeft; // <-- Left aligned now
     
     // Use Chirp Regular font
     footerLabel.font = TwitterChirpFont(TwitterFontStyleRegular);
@@ -681,8 +681,8 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     [footerView addSubview:footerLabel];
     
     [NSLayoutConstraint activateConstraints:@[
-        [footerLabel.leadingAnchor constraintEqualToAnchor:footerView.leadingAnchor constant:16],
-        [footerLabel.trailingAnchor constraintEqualToAnchor:footerView.trailingAnchor constant:-16],
+        [footerLabel.leadingAnchor constraintEqualToAnchor:footerView.leadingAnchor constant:20], // match table cell padding
+        [footerLabel.trailingAnchor constraintEqualToAnchor:footerView.trailingAnchor constant:-20],
         [footerLabel.topAnchor constraintEqualToAnchor:footerView.topAnchor constant:8],
         [footerLabel.bottomAnchor constraintEqualToAnchor:footerView.bottomAnchor constant:-8]
     ]];
