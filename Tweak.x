@@ -4054,8 +4054,20 @@ static NSBundle *BHBundle() {
     }
 %end
 
-%hook GrokTranslateButtonViewConfig
-- (BOOL)showInfoButtonForTranslated {
-   return false;
+%hook TFSReplySortingState
+- (BOOL)isSortedByLikes {
+   return true;
+}
+%end
+
+%hook T1ConversationSummaryViewAdapter
+- (BOOL)isFocal {
+   return true;
+}
+%end
+
+%hook TTAActivitySummaryView
+- (BOOL)isFocal {
+   return true;
 }
 %end
