@@ -15,6 +15,9 @@
 "RESTART_NOW_BUTTON_TITLE" = "Restart";
 "MODERN_LAYOUT_RESTART_MESSAGE" = "To switch between the modern and classic layouts, you need to restart Twitter";
 
+"RESET_COMPLETE_TITLE" = "Reset background sucessfully";
+"BACKGROUND_RESET_MESSAGE" = "Background has been reset to twitter default.";
+
 "CONFIRM_ALERT_MESSAGE" = "Sure you meant to do that?";
 "YES_BUTTON_TITLE" = "Yes";
 "NO_BUTTON_TITLE" = "No";
@@ -210,8 +213,8 @@
 "STOP_HIDING_TAB_BAR_TITLE" = "Keep the navigation bar visible";
 "STOP_HIDING_TAB_BAR_DETAIL_TITLE" = "Don't fade the navigation bar when you scroll.";
 
-"CLASSIC_TAB_BAR_SETTINGS_TITLE" = "Classic navigation bar";
-"CLASSIC_TAB_BAR_SETTINGS_DETAIL" = "Applies your accent color to the currently selected navigation item.";
+"CLASSIC_TAB_BAR_SETTINGS_TITLE" = "Classic tab bar";
+"CLASSIC_TAB_BAR_SETTINGS_DETAIL" = "Applies your accent color to the currently selected tab item.";
 
 "DISABLE_RTL_OPTION_TITLE" = "Use left-to-right layout";
 "DISABLE_RTL_OPTION_DETAIL_TITLE" = "Force a a left-to-right layout, even for languages that are read from right-to-left.";
@@ -322,8 +325,8 @@
 "CLASSIC_TAB_BAR_DISABLED_NOTIFICATION_NAME" = "BHTClassicTabBarSettingChangedNotification";
 
 /* Restore tab labels */
-"RESTORE_TAB_LABELS_TITLE" = "Navigation labels";
-"RESTORE_TAB_LABELS_DETAIL" = "Show labels under icons in the navigation bar like legacy Twitter versions.";
+"RESTORE_TAB_LABELS_TITLE" = "Tab labels";
+"RESTORE_TAB_LABELS_DETAIL" = "Show labels under icons in the tab bar.";
 
 /*Message customization*/
 "CUSTOM_DIRECT_BACKGROUND_ALERT_OPTION_1" = "Use an image";
@@ -356,22 +359,25 @@
 "MODERN_SETTINGS_LAYOUT_TITLE" = "General";
 "MODERN_SETTINGS_LAYOUT_SUBTITLE" = "Make your timeline yours with custom fonts, navigation bar theming, and much more.";
 
-"MODERN_SETTINGS_MEDIA_TITLE" = "Media";
+"MODERN_SETTINGS_MEDIA_TITLE" = "Photos & Videos";
 "MODERN_SETTINGS_MEDIA_SUBTITLE" = "Download videos, enable video timestamps, and more.";
 
 "MODERN_SETTINGS_TWITTER_BLUE_TITLE" = "Twitter Blue";
 "MODERN_SETTINGS_TWITTER_BLUE_SUBTITLE" = "Get an ad-free experience and unlock Blue features like Undo Tweet, themes, and custom app icons.";
 
 "MODERN_SETTINGS_PROFILES_TITLE" = "Profile";
-"MODERN_SETTINGS_PROFILES_SUBTITLE" = "Change what you see on profiles.";
+"MODERN_SETTINGS_PROFILES_SUBTITLE" = "Change what you see on users profiles.";
 
-"MODERN_SETTINGS_TWEETS_TITLE" = "Tweets and replies";
-"MODERN_SETTINGS_TWEETS_SUBTITLE" = "Change how tweets work and remove features you may not use.";
+"MODERN_SETTINGS_TWEETS_TITLE" = "Tweets & replies";
+"MODERN_SETTINGS_TWEETS_SUBTITLE" = "Change the look of tweets and remove features you may not use.";
 
 "MODERN_SETTINGS_MESSAGES_TITLE" = "Messages";
 "MODERN_SETTINGS_MESSAGES_SUBTITLE" = "Customize your Twitter messaging experience.";
 
 "MODERN_SETTINGS_EXPERIMENTAL_TITLE" = "Labs";
-"MODERN_SETTINGS_EXPERIMENTAL_SUBTITLE" = "Try unstable features.";
+"MODERN_SETTINGS_EXPERIMENTAL_SUBTITLE" = "Try features we're currently testing.";
 
-"MODERN_SETTINGS_PLACEHOLDER_TEXT" = "Nothing to see here - yet.";
+"SPECIAL_THANKS_SECTION_HEADER_TITLE" = "Special Thanks";
+"FOLLOW_OFFICIAL_PAGE_SECTION_HEADER_TITLE" = "Follow our Page";
+
+"MODERN_SETTINGS_PLACEHOLDER_TEXT" = "Nothing to see here.";
