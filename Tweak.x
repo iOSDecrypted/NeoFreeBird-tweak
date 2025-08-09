@@ -4054,15 +4054,12 @@ static NSBundle *BHBundle() {
     }
 %end
 
-%hook TFSReplySortingState
-- (BOOL)isSortedByLikes {
-   return true;
-}
-%end
-
-%hook T1ConversationSummaryViewAdapter
+%hook T1ConversationActivitySummaryViewAdapter
 - (BOOL)isFocal {
    return true;
+}
+- (void)setIsFocal:(BOOL)focal {
+   %orig(true)
 }
 %end
 
@@ -4070,4 +4067,8 @@ static NSBundle *BHBundle() {
 - (BOOL)isFocal {
    return true;
 }
+- (void)setIsFocal:(BOOL)focal {
+   %orig(true)
+}
+
 %end
