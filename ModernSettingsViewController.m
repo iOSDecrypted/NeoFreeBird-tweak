@@ -87,6 +87,8 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray *sections;
 @property (nonatomic, strong) NSArray *developerCells;
+@property (nonatomic, strong) NSArray *specialThanksCells;
+@property (nonatomic, strong) NSArray *officialPageCells;
 @end
 
 @implementation ModernSettingsTableViewCell
@@ -482,41 +484,54 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
         ]];
         
         return headerView;
-    } else if (section == 1) {
-        // Developer section header
-        UIView *headerView = [[UIView alloc] init];
-        headerView.backgroundColor = [BHDimPalette currentBackgroundColor];
-        
-        UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        titleLabel.text = [[BHTBundle sharedBundle] localizedStringForKey:@"DEVELOPER_SECTION_HEADER_TITLE"];
-        
-        id fontGroup = [objc_getClass("TAEStandardFontGroup") sharedFontGroup];
-        titleLabel.font = [fontGroup performSelector:@selector(headline1BoldFont)];
-        
-        Class TAEColorSettingsCls = objc_getClass("TAEColorSettings");
-        id settings = [TAEColorSettingsCls sharedSettings];
-        id currentPalette = [settings currentColorPalette];
-        id colorPalette = [currentPalette colorPalette];
-        UIColor *titleColor = [colorPalette performSelector:@selector(textColor)];
-        titleLabel.textColor = titleColor;
-        
-        [headerView addSubview:titleLabel];
-        
-        [NSLayoutConstraint activateConstraints:@[
-            [titleLabel.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor constant:20],
-            [titleLabel.trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor constant:-20],
-            [titleLabel.topAnchor constraintEqualToAnchor:headerView.topAnchor constant:32],
-            [titleLabel.bottomAnchor constraintEqualToAnchor:headerView.bottomAnchor constant:-16]
-        ]];
-        
-        return headerView;
+    } 
+    else if (section == 1) {
+        // Developers section header
+        return [self headerViewWithTitle:[[BHTBundle sharedBundle] localizedStringForKey:@"DEVELOPER_SECTION_HEADER_TITLE"]];
+    } 
+    else if (section == 2) {
+        // Special Thanks section header
+        return [self headerViewWithTitle:@"Special Thanks"];
+    } 
+    else if (section == 3) {
+        // Official Page section header
+        return [self headerViewWithTitle:@"Follow the Official Page"];
     }
     return nil;
 }
 
+- (UIView *)headerViewWithTitle:(NSString *)title {
+    UIView *headerView = [[UIView alloc] init];
+    headerView.backgroundColor = [BHDimPalette currentBackgroundColor];
+    
+    UILabel *titleLabel = [[UILabel alloc] init];
+    titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    titleLabel.text = title;
+    
+    id fontGroup = [objc_getClass("TAEStandardFontGroup") sharedFontGroup];
+    titleLabel.font = [fontGroup performSelector:@selector(headline1BoldFont)];
+    
+    Class TAEColorSettingsCls = objc_getClass("TAEColorSettings");
+    id settings = [TAEColorSettingsCls sharedSettings];
+    id currentPalette = [settings currentColorPalette];
+    id colorPalette = [currentPalette colorPalette];
+    UIColor *titleColor = [colorPalette performSelector:@selector(textColor)];
+    titleLabel.textColor = titleColor;
+    
+    [headerView addSubview:titleLabel];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [titleLabel.leadingAnchor constraintEqualToAnchor:headerView.leadingAnchor constant:20],
+        [titleLabel.trailingAnchor constraintEqualToAnchor:headerView.trailingAnchor constant:-20],
+        [titleLabel.topAnchor constraintEqualToAnchor:headerView.topAnchor constant:32],
+        [titleLabel.bottomAnchor constraintEqualToAnchor:headerView.bottomAnchor constant:-16]
+    ]];
+    
+    return headerView;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (section == 0 || section == 1) {
+    if (section == 0 || section == 1 || section == 2 || section == 3) {
         return UITableViewAutomaticDimension;
     }
     return 0;
@@ -579,9 +594,15 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 - (void)setupDeveloperCells {
     self.developerCells = @[
         @{ @"title": @"aridan", @"username": @"actuallyaridan", @"avatarURL": @"https://unavatar.io/x/actuallyaridan", @"userID": @"1351218086649720837" },
-        @{ @"title": @"timi2506", @"username": @"timi2506", @"avatarURL": @"https://unavatar.io/github/timi2506", @"userID": @"1671731225424195584" },
-        @{ @"title": @"thea", @"username": @"nyaathea", @"avatarURL": @"https://unavatar.io/github/nyathea", @"userID": @"1541742676009226241" },
-        @{ @"title": @"BandarHelal", @"username": @"BandarHL", @"avatarURL": @"https://unavatar.io/x/BandarHL", @"userID": @"827842200708853762" },
+        @{ @"title": @"timi2506", @"username": @"timi2506", @"avatarURL": @"https://unavatar.io/x/timi2506", @"userID": @"1671731225424195584" },
+        @{ @"title": @"nyathea", @"username": @"nyaathea", @"avatarURL": @"https://unavatar.io/x/nyaathea", @"userID": @"1541742676009226241" }
+    ];
+    
+    self.specialThanksCells = @[
+        @{ @"title": @"BandarHelal", @"username": @"BandarHL", @"avatarURL": @"https://unavatar.io/x/BandarHL", @"userID": @"827842200708853762" }
+    ];
+    
+    self.officialPageCells = @[
         @{ @"title": @"NeoFreeBird", @"username": @"NeoFreeBird", @"avatarURL": @"https://unavatar.io/x/NeoFreeBird", @"userID": @"1878595268255297537" }
     ];
 }
@@ -638,29 +659,60 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return (section == 0) ? self.sections.count : self.developerCells.count;
+    if (section == 0) {
+        return self.sections.count;
+    } else if (section == 1) {
+        return self.developerCells.count;
+    } else if (section == 2) {
+        return self.specialThanksCells.count;
+    } else if (section == 3) {
+        return self.officialPageCells.count;
+    }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
-        ModernSettingsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SettingsCell" forIndexPath:indexPath];
+        ModernSettingsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SettingsCell"
+                                                                             forIndexPath:indexPath];
         NSDictionary *sectionData = self.sections[indexPath.row];
-        [cell configureWithTitle:sectionData[@"title"] subtitle:sectionData[@"subtitle"] iconName:sectionData[@"icon"]];
-        return cell;
-    } else {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DeveloperCell"];
-        if (!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DeveloperCell"];
-            [self setupDeveloperCell:cell];
-        }
-        NSDictionary *developer = self.developerCells[indexPath.row];
-        [self configureDeveloperCell:cell withDeveloper:developer];
+        [cell configureWithTitle:sectionData[@"title"]
+                        subtitle:sectionData[@"subtitle"]
+                        iconName:sectionData[@"icon"]];
         return cell;
     }
+    else if (indexPath.section == 1) {
+        return [self developerCellForTableView:tableView
+                                   atIndexPath:indexPath
+                                     fromArray:self.developerCells];
+    }
+    else if (indexPath.section == 2) {
+        return [self developerCellForTableView:tableView
+                                   atIndexPath:indexPath
+                                     fromArray:self.specialThanksCells];
+    }
+    else if (indexPath.section == 3) {
+        return [self developerCellForTableView:tableView
+                                   atIndexPath:indexPath
+                                     fromArray:self.officialPageCells];
+    }
+    
+    return nil;
+}
+
+- (UITableViewCell *)developerCellForTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath fromArray:(NSArray *)array {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DeveloperCell"];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DeveloperCell"];
+        [self setupDeveloperCell:cell];
+    }
+    NSDictionary *developer = array[indexPath.row];
+    [self configureDeveloperCell:cell withDeveloper:developer];
+    return cell;
 }
 
 #pragma mark - Developer Cell Setup
