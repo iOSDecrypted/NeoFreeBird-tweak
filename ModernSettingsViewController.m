@@ -2,6 +2,7 @@
 #import "BHTBundle/BHTBundle.h"
 #import "BHDimPalette.h"
 #import "SettingsViewController.h"
+#import "Colours/Colours.h"
 
 @class TFNTwitterAccount;
 @interface GeneralSettingsViewController : UIViewController
