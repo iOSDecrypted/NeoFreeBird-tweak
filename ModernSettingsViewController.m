@@ -490,12 +490,14 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
         return [self headerViewWithTitle:[[BHTBundle sharedBundle] localizedStringForKey:@"DEVELOPER_SECTION_HEADER_TITLE"]];
     } 
     else if (section == 2) {
-        // Special Thanks section header
-        return [self headerViewWithTitle:@"Special Thanks"];
+    // Special Thanks section header
+    return [self headerViewWithTitle:
+        [[BHTBundle sharedBundle] localizedStringForKey:@"SPECIAL_THANKS_SECTION_HEADER_TITLE"]];
     } 
     else if (section == 3) {
-        // Official Page section header
-        return [self headerViewWithTitle:@"Follow Our Page"];
+    // Official Page section header
+    return [self headerViewWithTitle:
+        [[BHTBundle sharedBundle] localizedStringForKey:@"FOLLOW_OFFICIAL_PAGE_SECTION_HEADER_TITLE"]];
     }
     return nil;
 }
