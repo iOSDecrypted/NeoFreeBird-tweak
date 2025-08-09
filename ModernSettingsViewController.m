@@ -200,118 +200,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 
 @end
 
-@implementation ModernSettingsTableViewCell
-
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        [self setupViews];
-        [self setupConstraints];
-    }
-    return self;
-}
-
-- (void)setupViews {
-    self.iconImageView = [[UIImageView alloc] init];
-    self.iconImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.iconImageView.contentMode = UIViewContentModeScaleAspectFit;
-    self.iconImageView.tintColor = [UIColor secondaryLabelColor];
-    [self.contentView addSubview:self.iconImageView];
-    
-    self.titleLabel = [[UILabel alloc] init];
-    self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    id fontGroup = [objc_getClass("TAEStandardFontGroup") sharedFontGroup];
-    self.titleLabel.font = [fontGroup performSelector:@selector(bodyBoldFont)];
-    self.titleLabel.textColor = [UIColor labelColor];
-    [self.contentView addSubview:self.titleLabel];
-    
-    self.subtitleLabel = [[UILabel alloc] init];
-    self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.subtitleLabel.font = [fontGroup performSelector:@selector(subtext2Font)];
-    [self updateSubtitleColor];
-    self.subtitleLabel.numberOfLines = 0;
-    [self.contentView addSubview:self.subtitleLabel];
-    
-    self.chevronImageView = [[UIImageView alloc] init];
-    self.chevronImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.chevronImageView.contentMode = UIViewContentModeScaleAspectFit;
-    [self.contentView addSubview:self.chevronImageView];
-    
-    self.backgroundColor = [BHDimPalette currentBackgroundColor];
-    self.selectionStyle = UITableViewCellSelectionStyleDefault;
-}
-
-- (void)setupConstraints {
-    [NSLayoutConstraint activateConstraints:@[
-        [self.iconImageView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:20],
-        [self.iconImageView.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
-        [self.iconImageView.widthAnchor constraintEqualToConstant:20],
-        [self.iconImageView.heightAnchor constraintEqualToConstant:20],
-        
-        [self.titleLabel.leadingAnchor constraintEqualToAnchor:self.iconImageView.trailingAnchor constant:16],
-        [self.titleLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:16],
-        [self.titleLabel.trailingAnchor constraintEqualToAnchor:self.chevronImageView.leadingAnchor constant:-16],
-        
-        [self.subtitleLabel.leadingAnchor constraintEqualToAnchor:self.titleLabel.leadingAnchor],
-        [self.subtitleLabel.topAnchor constraintEqualToAnchor:self.titleLabel.bottomAnchor constant:2],
-        [self.subtitleLabel.trailingAnchor constraintEqualToAnchor:self.titleLabel.trailingAnchor],
-        [self.subtitleLabel.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:-16],
-        
-        [self.chevronImageView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-20],
-        [self.chevronImageView.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
-        [self.chevronImageView.widthAnchor constraintEqualToConstant:18],
-        [self.chevronImageView.heightAnchor constraintEqualToConstant:18]
-    ]];
-}
-
-- (void)configureWithTitle:(NSString *)title subtitle:(NSString *)subtitle iconName:(NSString *)iconName {
-    self.titleLabel.text = title;
-    self.subtitleLabel.text = subtitle;
-    objc_setAssociatedObject(self, @selector(iconName), iconName, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self updateIconColors];
-}
-
-- (void)updateIconColors {
-    NSString *iconName = objc_getAssociatedObject(self, @selector(iconName));
-    if (iconName) {
-        Class TAEColorSettingsCls = objc_getClass("TAEColorSettings");
-        id settings = [TAEColorSettingsCls sharedSettings];
-        id currentPalette = [settings currentColorPalette];
-        id colorPalette = [currentPalette colorPalette];
-        UIColor *iconColor = [colorPalette performSelector:@selector(tabBarItemColor)];
-        self.iconImageView.image = [UIImage tfn_vectorImageNamed:iconName fitsSize:CGSizeMake(20, 20) fillColor:iconColor];
-    }
-    Class TAEColorSettingsCls = objc_getClass("TAEColorSettings");
-    id settings = [TAEColorSettingsCls sharedSettings];
-    id currentPalette = [settings currentColorPalette];
-    id colorPalette = [currentPalette colorPalette];
-    UIColor *chevronColor = [colorPalette performSelector:@selector(tabBarItemColor)];
-    self.chevronImageView.image = [UIImage tfn_vectorImageNamed:@"chevron_right" fitsSize:CGSizeMake(18, 18) fillColor:chevronColor];
-}
-
-- (void)updateSubtitleColor {
-    Class TAEColorSettingsCls = objc_getClass("TAEColorSettings");
-    id settings = [TAEColorSettingsCls sharedSettings];
-    id currentPalette = [settings currentColorPalette];
-    id colorPalette = [currentPalette colorPalette];
-    UIColor *subtitleColor = [colorPalette performSelector:@selector(tabBarItemColor)];
-    self.subtitleLabel.textColor = subtitleColor;
-}
-
-- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
-    [super traitCollectionDidChange:previousTraitCollection];
-    self.backgroundColor = [BHDimPalette currentBackgroundColor];
-    [self updateIconColors];
-    [self updateSubtitleColor];
-    if (previousTraitCollection.preferredContentSizeCategory != self.traitCollection.preferredContentSizeCategory) {
-        id fontGroup = [objc_getClass("TAEStandardFontGroup") sharedFontGroup];
-        self.titleLabel.font = [fontGroup performSelector:@selector(bodyBoldFont)];
-        self.subtitleLabel.font = [fontGroup performSelector:@selector(subtext2Font)];
-    }
-}
-
-@end
-
 @implementation ModernSettingsSimpleButtonCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -1735,6 +1623,78 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 @end
 
 @implementation GeneralSettingsViewController
+
+- (void)refreshAllTabViewsWithTheming {
+    for (UIWindow *window in [UIApplication sharedApplication].windows) {
+        if (window.isKeyWindow && window.rootViewController) {
+            [self refreshTabViewsWithThemingInView:window.rootViewController.view];
+        }
+    }
+}
+
+- (void)refreshTabViewsWithThemingInView:(UIView *)view {
+    if ([view isKindOfClass:NSClassFromString(@"T1TabView")]) {
+        if ([view respondsToSelector:@selector(_t1_updateImageViewAnimated:)]) {
+            [view performSelector:@selector(_t1_updateImageViewAnimated:) withObject:@(NO)];
+        }
+        if ([view respondsToSelector:@selector(_t1_updateTitleLabel)]) {
+            [view performSelector:@selector(_t1_updateTitleLabel)];
+        }
+        if ([view respondsToSelector:@selector(_t1_layoutForTabBar)]) {
+            [view performSelector:@selector(_t1_layoutForTabBar)];
+        }
+        if ([view respondsToSelector:@selector(_t1_layoutBadgeViewMaximized)]) {
+            [view performSelector:@selector(_t1_layoutBadgeViewMaximized)];
+        }
+        if ([view respondsToSelector:@selector(_t1_layoutBadgeViewMinimized)]) {
+            [view performSelector:@selector(_t1_layoutBadgeViewMinimized)];
+        }
+        
+        if (![[[NSUserDefaults standardUserDefaults] objectForKey:@"tab_bar_theming"] boolValue]) {
+            UILabel *titleLabel = [view valueForKey:@"titleLabel"];
+            if (titleLabel) {
+                titleLabel.textColor = nil;
+            }
+        }
+    }
+    
+    for (UIView *subview in view.subviews) {
+        [self refreshTabViewsWithThemingInView:subview];
+    }
+}
+
+- (void)refreshAllTabViews {
+    for (UIWindow *window in [UIApplication sharedApplication].windows) {
+        if (window.isKeyWindow && window.rootViewController) {
+            [self refreshTabViewsInView:window.rootViewController.view];
+        }
+    }
+}
+
+- (void)refreshTabViewsInView:(UIView *)view {
+    if ([view isKindOfClass:NSClassFromString(@"T1TabView")]) {
+        if ([view respondsToSelector:@selector(_t1_updateTitleLabel)]) {
+            [view performSelector:@selector(_t1_updateTitleLabel)];
+        }
+        if ([view respondsToSelector:@selector(_t1_layoutForTabBar)]) {
+            [view performSelector:@selector(_t1_layoutForTabBar)];
+        }
+        if ([view respondsToSelector:@selector(_t1_layoutBadgeViewMaximized)]) {
+            [view performSelector:@selector(_t1_layoutBadgeViewMaximized)];
+        }
+        
+        if (![[[NSUserDefaults standardUserDefaults] objectForKey:@"tab_bar_theming"] boolValue]) {
+            UILabel *titleLabel = [view valueForKey:@"titleLabel"];
+            if (titleLabel) {
+                titleLabel.textColor = nil;
+            }
+        }
+    }
+    
+    for (UIView *subview in view.subviews) {
+        [self refreshTabViewsInView:subview];
+    }
+}
 
 - (instancetype)initWithAccount:(TFNTwitterAccount *)account {
     if ((self = [super init])) {
