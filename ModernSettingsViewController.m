@@ -612,6 +612,7 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     [self setupNavigationBar];
     [self setupTableView];
     [self setupLayout];
+    [self setupFooterLabel];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentSizeCategoryDidChange:) name:UIContentSizeCategoryDidChangeNotification object:nil];
 }
 
@@ -654,6 +655,39 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
         [self.tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
         [self.tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
     ]];
+}
+
+- (void)setupFooterLabel {
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 60)];
+    footerView.backgroundColor = [BHDimPalette currentBackgroundColor];
+    
+    UILabel *footerLabel = [[UILabel alloc] init];
+    footerLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    footerLabel.text = @"NeoFreeBird v2.0 (release)\nNeoFreeBird-BHTwitter v5.1 (release)";
+    footerLabel.numberOfLines = 0;
+    footerLabel.textAlignment = NSTextAlignmentCenter;
+    
+    // Use Chirp Regular font
+    footerLabel.font = TwitterChirpFont(TwitterFontStyleRegular);
+    
+    // Match subtitle color
+    Class TAEColorSettingsCls = objc_getClass("TAEColorSettings");
+    id settings = [TAEColorSettingsCls sharedSettings];
+    id currentPalette = [settings currentColorPalette];
+    id colorPalette = [currentPalette colorPalette];
+    UIColor *subtitleColor = [colorPalette performSelector:@selector(tabBarItemColor)];
+    footerLabel.textColor = subtitleColor;
+    
+    [footerView addSubview:footerLabel];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [footerLabel.leadingAnchor constraintEqualToAnchor:footerView.leadingAnchor constant:16],
+        [footerLabel.trailingAnchor constraintEqualToAnchor:footerView.trailingAnchor constant:-16],
+        [footerLabel.topAnchor constraintEqualToAnchor:footerView.topAnchor constant:8],
+        [footerLabel.bottomAnchor constraintEqualToAnchor:footerView.bottomAnchor constant:-8]
+    ]];
+    
+    self.tableView.tableFooterView = footerView;
 }
 
 #pragma mark - UITableViewDataSource
