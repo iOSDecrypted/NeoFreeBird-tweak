@@ -426,6 +426,27 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 
 @implementation ModernSettingsViewController
 
+- (void)colorPickerViewControllerDidSelectColor:(UIColorPickerViewController *)viewController {
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"change_msg_background"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"background_image"];
+    
+    UIColor *selectedColor = viewController.selectedColor;
+    if ([selectedColor respondsToSelector:@selector(hexString)]) {
+        [[NSUserDefaults standardUserDefaults] setObject:selectedColor.hexString forKey:@"background_color"];
+    } else {
+        // Fallback: convert to hex manually
+        CGFloat r, g, b, a;
+        [selectedColor getRed:&r green:&g blue:&b alpha:&a];
+        NSString *hexString = [NSString stringWithFormat:@"#%02lX%02lX%02lX",
+                               lroundf(r * 255),
+                               lroundf(g * 255),
+                               lroundf(b * 255)];
+        [[NSUserDefaults standardUserDefaults] setObject:hexString forKey:@"background_color"];
+    }
+    
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 #pragma mark - Section Headers
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
