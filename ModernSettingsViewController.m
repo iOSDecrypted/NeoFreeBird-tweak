@@ -3,7 +3,6 @@
 #import "BHDimPalette.h"
 #import "SettingsViewController.h"
 
-// Forward declare full interface so compiler knows the class and its init method
 @class TFNTwitterAccount;
 @interface GeneralSettingsViewController : UIViewController
 - (instancetype)initWithAccount:(TFNTwitterAccount *)account;
@@ -33,10 +32,6 @@
 - (instancetype)initWithAccount:(TFNTwitterAccount *)account;
 @end
 
-// Forward declaration for the view-controller implemented later in this file
-@class GeneralSettingsViewController;
-
-// Import external function to get theme color
 extern UIColor *BHTCurrentAccentColor(void);
 
 typedef NS_ENUM(NSInteger, TwitterFontStyle) {
@@ -50,11 +45,9 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
         case TwitterFontStyleBold:
             return [UIFont fontWithName:@"ChirpUIVF_wght3200000_opsz150000" size:17] ?: 
                    [UIFont systemFontOfSize:17 weight:UIFontWeightBold];
-            
         case TwitterFontStyleSemibold:
             return [UIFont fontWithName:@"ChirpUIVF_wght2BC0000_opszE0000" size:14] ?: 
                    [UIFont systemFontOfSize:14 weight:UIFontWeightSemibold];
-            
         case TwitterFontStyleRegular:
         default:
             return [UIFont fontWithName:@"ChirpUIVF_wght1900000_opszE0000" size:12] ?: 
@@ -84,357 +77,9 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *subtitleLabel;
 @property (nonatomic, strong) UISwitch *toggleSwitch;
-
 - (void)configureWithTitle:(NSString *)title subtitle:(NSString *)subtitle;
 - (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)events;
 @end
-
-@implementation ModernSettingsTableViewCell
-
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        [self setupViews];
-        [self setupConstraints];
-    }
-    return self;
-}
-
-- (void)setupViews {
-    self.iconImageView = [[UIImageView alloc] init];
-    self.iconImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.iconImageView.contentMode = UIViewContentModeScaleAspectFit;
-    self.iconImageView.tintColor = [UIColor secondaryLabelColor];
-    [self.contentView addSubview:self.iconImageView];
-    
-    self.titleLabel = [[UILabel alloc] init];
-    self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    id fontGroup = [objc_getClass("TAEStandardFontGroup") sharedFontGroup];
-    self.titleLabel.font = [fontGroup performSelector:@selector(bodyBoldFont)];
-    self.titleLabel.textColor = [UIColor labelColor];
-    [self.contentView addSubview:self.titleLabel];
-    
-    self.subtitleLabel = [[UILabel alloc] init];
-    self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.subtitleLabel.font = [fontGroup performSelector:@selector(subtext2Font)];
-    [self updateSubtitleColor];
-    self.subtitleLabel.numberOfLines = 0;
-    [self.contentView addSubview:self.subtitleLabel];
-    
-    self.chevronImageView = [[UIImageView alloc] init];
-    self.chevronImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.chevronImageView.contentMode = UIViewContentModeScaleAspectFit;
-    [self.contentView addSubview:self.chevronImageView];
-    
-    self.backgroundColor = [BHDimPalette currentBackgroundColor];
-    self.selectionStyle = UITableViewCellSelectionStyleDefault;
-}
-
-- (void)setupConstraints {
-    [NSLayoutConstraint activateConstraints:@[
-        [self.iconImageView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:20],
-        [self.iconImageView.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
-        [self.iconImageView.widthAnchor constraintEqualToConstant:20],
-        [self.iconImageView.heightAnchor constraintEqualToConstant:20],
-        
-        [self.titleLabel.leadingAnchor constraintEqualToAnchor:self.iconImageView.trailingAnchor constant:16],
-        [self.titleLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:16],
-        [self.titleLabel.trailingAnchor constraintEqualToAnchor:self.chevronImageView.leadingAnchor constant:-16],
-        
-        [self.subtitleLabel.leadingAnchor constraintEqualToAnchor:self.titleLabel.leadingAnchor],
-        [self.subtitleLabel.topAnchor constraintEqualToAnchor:self.titleLabel.bottomAnchor constant:2],
-        [self.subtitleLabel.trailingAnchor constraintEqualToAnchor:self.titleLabel.trailingAnchor],
-        [self.subtitleLabel.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:-16],
-        
-        [self.chevronImageView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-20],
-        [self.chevronImageView.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
-        [self.chevronImageView.widthAnchor constraintEqualToConstant:18],
-        [self.chevronImageView.heightAnchor constraintEqualToConstant:18]
-    ]];
-}
-
-- (void)configureWithTitle:(NSString *)title subtitle:(NSString *)subtitle iconName:(NSString *)iconName {
-    self.titleLabel.text = title;
-    self.subtitleLabel.text = subtitle;
-    objc_setAssociatedObject(self, @selector(iconName), iconName, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self updateIconColors];
-}
-
-- (void)updateIconColors {
-    NSString *iconName = objc_getAssociatedObject(self, @selector(iconName));
-    if (iconName) {
-        Class TAEColorSettingsCls = objc_getClass("TAEColorSettings");
-        id settings = [TAEColorSettingsCls sharedSettings];
-        id currentPalette = [settings currentColorPalette];
-        id colorPalette = [currentPalette colorPalette];
-        UIColor *iconColor = [colorPalette performSelector:@selector(tabBarItemColor)];
-        self.iconImageView.image = [UIImage tfn_vectorImageNamed:iconName fitsSize:CGSizeMake(20, 20) fillColor:iconColor];
-    }
-    Class TAEColorSettingsCls = objc_getClass("TAEColorSettings");
-    id settings = [TAEColorSettingsCls sharedSettings];
-    id currentPalette = [settings currentColorPalette];
-    id colorPalette = [currentPalette colorPalette];
-    UIColor *chevronColor = [colorPalette performSelector:@selector(tabBarItemColor)];
-    self.chevronImageView.image = [UIImage tfn_vectorImageNamed:@"chevron_right" fitsSize:CGSizeMake(18, 18) fillColor:chevronColor];
-}
-
-- (void)updateSubtitleColor {
-    Class TAEColorSettingsCls = objc_getClass("TAEColorSettings");
-    id settings = [TAEColorSettingsCls sharedSettings];
-    id currentPalette = [settings currentColorPalette];
-    id colorPalette = [currentPalette colorPalette];
-    UIColor *subtitleColor = [colorPalette performSelector:@selector(tabBarItemColor)];
-    self.subtitleLabel.textColor = subtitleColor;
-}
-
-- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
-    [super traitCollectionDidChange:previousTraitCollection];
-    self.backgroundColor = [BHDimPalette currentBackgroundColor];
-    [self updateIconColors];
-    [self updateSubtitleColor];
-    if (previousTraitCollection.preferredContentSizeCategory != self.traitCollection.preferredContentSizeCategory) {
-        id fontGroup = [objc_getClass("TAEStandardFontGroup") sharedFontGroup];
-        self.titleLabel.font = [fontGroup performSelector:@selector(bodyBoldFont)];
-        self.subtitleLabel.font = [fontGroup performSelector:@selector(subtext2Font)];
-    }
-}
-
-@end
-
-@implementation ModernSettingsSimpleButtonCell
-
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        [self setupViews];
-        [self setupConstraints];
-    }
-    return self;
-}
-
-- (void)setupViews {
-    self.titleLabel = [[UILabel alloc] init];
-    self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    id fontGroup = [objc_getClass("TAEStandardFontGroup") sharedFontGroup];
-    self.titleLabel.font = [fontGroup performSelector:@selector(bodyBoldFont)];
-    self.titleLabel.textColor = [UIColor labelColor];
-    [self.contentView addSubview:self.titleLabel];
-    
-    self.chevronImageView = [[UIImageView alloc] init];
-    self.chevronImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.chevronImageView.contentMode = UIViewContentModeScaleAspectFit;
-    [self.contentView addSubview:self.chevronImageView];
-    
-    self.backgroundColor = [BHDimPalette currentBackgroundColor];
-    self.selectionStyle = UITableViewCellSelectionStyleDefault;
-    [self updateChevronColor];
-}
-
-- (void)setupConstraints {
-    [NSLayoutConstraint activateConstraints:@[
-        [self.titleLabel.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:20],
-        [self.titleLabel.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
-        [self.titleLabel.trailingAnchor constraintEqualToAnchor:self.chevronImageView.leadingAnchor constant:-16],
-        [self.titleLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:16],
-        [self.titleLabel.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:-16],
-        
-        [self.chevronImageView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-20],
-        [self.chevronImageView.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
-        [self.chevronImageView.widthAnchor constraintEqualToConstant:18],
-        [self.chevronImageView.heightAnchor constraintEqualToConstant:18]
-    ]];
-}
-
-- (void)configureWithTitle:(NSString *)title {
-    self.titleLabel.text = title;
-}
-
-- (void)updateChevronColor {
-    Class TAEColorSettingsCls = objc_getClass("TAEColorSettings");
-    id settings = [TAEColorSettingsCls sharedSettings];
-    id currentPalette = [settings currentColorPalette];
-    id colorPalette = [currentPalette colorPalette];
-    UIColor *chevronColor = [colorPalette performSelector:@selector(tabBarItemColor)];
-    self.chevronImageView.image = [UIImage tfn_vectorImageNamed:@"chevron_right" fitsSize:CGSizeMake(18, 18) fillColor:chevronColor];
-}
-
-- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
-    [super traitCollectionDidChange:previousTraitCollection];
-    self.backgroundColor = [BHDimPalette currentBackgroundColor];
-    [self updateChevronColor];
-    if (previousTraitCollection.preferredContentSizeCategory != self.traitCollection.preferredContentSizeCategory) {
-        id fontGroup = [objc_getClass("TAEStandardFontGroup") sharedFontGroup];
-        self.titleLabel.font = [fontGroup performSelector:@selector(bodyBoldFont)];
-    }
-}
-
-@end
-
-@implementation ModernSettingsCompactButtonCell
-
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        [self setupViews];
-        [self setupConstraints];
-    }
-    return self;
-}
-
-- (void)setupViews {
-    self.titleLabel = [[UILabel alloc] init];
-    self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    id fontGroup = [objc_getClass("TAEStandardFontGroup") sharedFontGroup];
-    self.titleLabel.font = [fontGroup performSelector:@selector(bodyBoldFont)];
-    self.titleLabel.textColor = [UIColor labelColor];
-    [self.contentView addSubview:self.titleLabel];
-    
-    self.subtitleLabel = [[UILabel alloc] init];
-    self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.subtitleLabel.font = [fontGroup performSelector:@selector(subtext2Font)];
-    self.subtitleLabel.textAlignment = NSTextAlignmentRight;
-    [self updateSubtitleColor];
-    [self.contentView addSubview:self.subtitleLabel];
-    
-    self.chevronImageView = [[UIImageView alloc] init];
-    self.chevronImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.chevronImageView.contentMode = UIViewContentModeScaleAspectFit;
-    [self.contentView addSubview:self.chevronImageView];
-    
-    self.backgroundColor = [BHDimPalette currentBackgroundColor];
-    self.selectionStyle = UITableViewCellSelectionStyleDefault;
-    [self updateChevronColor];
-}
-
-- (void)setupConstraints {
-    [NSLayoutConstraint activateConstraints:@[
-        [self.titleLabel.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:20],
-        [self.titleLabel.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
-        [self.titleLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:16],
-        [self.titleLabel.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:-16],
-        
-        [self.subtitleLabel.leadingAnchor constraintGreaterThanOrEqualToAnchor:self.titleLabel.trailingAnchor constant:16],
-        [self.subtitleLabel.trailingAnchor constraintEqualToAnchor:self.chevronImageView.leadingAnchor constant:-8],
-        [self.subtitleLabel.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
-        
-        [self.chevronImageView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-20],
-        [self.chevronImageView.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
-        [self.chevronImageView.widthAnchor constraintEqualToConstant:18],
-        [self.chevronImageView.heightAnchor constraintEqualToConstant:18]
-    ]];
-    
-    [self.titleLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
-    [self.subtitleLabel setContentHuggingPriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
-    [self.subtitleLabel setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
-}
-
-- (void)configureWithTitle:(NSString *)title subtitle:(NSString *)subtitle {
-    self.titleLabel.text = title;
-    self.subtitleLabel.text = subtitle;
-}
-
-- (void)updateChevronColor {
-    Class TAEColorSettingsCls = objc_getClass("TAEColorSettings");
-    id settings = [TAEColorSettingsCls sharedSettings];
-    id currentPalette = [settings currentColorPalette];
-    id colorPalette = [currentPalette colorPalette];
-    UIColor *chevronColor = [colorPalette performSelector:@selector(tabBarItemColor)];
-    self.chevronImageView.image = [UIImage tfn_vectorImageNamed:@"chevron_right" fitsSize:CGSizeMake(18, 18) fillColor:chevronColor];
-}
-
-- (void)updateSubtitleColor {
-    Class TAEColorSettingsCls = objc_getClass("TAEColorSettings");
-    id settings = [TAEColorSettingsCls sharedSettings];
-    id currentPalette = [settings currentColorPalette];
-    id colorPalette = [currentPalette colorPalette];
-    UIColor *subtitleColor = [colorPalette performSelector:@selector(tabBarItemColor)];
-    self.subtitleLabel.textColor = subtitleColor;
-}
-
-- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
-    [super traitCollectionDidChange:previousTraitCollection];
-    self.backgroundColor = [BHDimPalette currentBackgroundColor];
-    [self updateChevronColor];
-    [self updateSubtitleColor];
-    if (previousTraitCollection.preferredContentSizeCategory != self.traitCollection.preferredContentSizeCategory) {
-        id fontGroup = [objc_getClass("TAEStandardFontGroup") sharedFontGroup];
-        self.titleLabel.font = [fontGroup performSelector:@selector(bodyBoldFont)];
-        self.subtitleLabel.font = [fontGroup performSelector:@selector(subtext2Font)];
-    }
-}
-
-@end
-
-@implementation ModernSettingsToggleCell
-
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        self.selectionStyle = UITableViewCellSelectionStyleNone;
-        self.backgroundColor = [BHDimPalette currentBackgroundColor];
-
-        self.titleLabel = [UILabel new];
-        self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.contentView addSubview:self.titleLabel];
-        
-        self.subtitleLabel = [UILabel new];
-        self.subtitleLabel.numberOfLines = 0;
-        self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.contentView addSubview:self.subtitleLabel];
-        
-        self.toggleSwitch = [UISwitch new];
-        self.toggleSwitch.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.contentView addSubview:self.toggleSwitch];
-
-        [self applyTheme];
-        
-        [NSLayoutConstraint activateConstraints:@[
-            [self.toggleSwitch.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-20],
-            [self.titleLabel.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:20],
-            [self.titleLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:14],
-            [self.titleLabel.trailingAnchor constraintEqualToAnchor:self.toggleSwitch.leadingAnchor constant:-16],
-            [self.toggleSwitch.centerYAnchor constraintEqualToAnchor:self.titleLabel.centerYAnchor],
-            [self.subtitleLabel.leadingAnchor constraintEqualToAnchor:self.titleLabel.leadingAnchor],
-            [self.subtitleLabel.trailingAnchor constraintEqualToAnchor:self.titleLabel.trailingAnchor],
-            [self.subtitleLabel.topAnchor constraintEqualToAnchor:self.titleLabel.bottomAnchor constant:4],
-            [self.subtitleLabel.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:-14]
-        ]];
-    }
-    return self;
-}
-
-- (void)configureWithTitle:(NSString *)title subtitle:(NSString *)subtitle {
-    self.titleLabel.text = title;
-    self.subtitleLabel.text = subtitle;
-}
-
-- (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)events {
-    [self.toggleSwitch addTarget:target action:action forControlEvents:events];
-}
-
-- (void)applyTheme {
-    id fontGroup = [objc_getClass("TAEStandardFontGroup") sharedFontGroup];
-    self.titleLabel.font = [fontGroup performSelector:@selector(bodyBoldFont)];
-    self.subtitleLabel.font = [fontGroup performSelector:@selector(subtext2Font)];
-
-    Class TAEColorSettingsCls = objc_getClass("TAEColorSettings");
-    id settings = [TAEColorSettingsCls sharedSettings];
-    id colorPalette = [[settings currentColorPalette] colorPalette];
-    self.titleLabel.textColor = [colorPalette performSelector:@selector(textColor)];
-    self.subtitleLabel.textColor = [colorPalette performSelector:@selector(tabBarItemColor)];
-    self.toggleSwitch.onTintColor = BHTCurrentAccentColor();
-}
-
-- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
-    [super traitCollectionDidChange:previousTraitCollection];
-    [self applyTheme];
-}
-
-@end
-
-// ======================================================
-// MARK: - Main Settings Page
-// ======================================================
 
 @interface ModernSettingsViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong) TFNTwitterAccount *account;
@@ -496,11 +141,7 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     [self setupNavigationBar];
     [self setupTableView];
     [self setupLayout];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(contentSizeCategoryDidChange:)
-                                                 name:UIContentSizeCategoryDidChangeNotification
-                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentSizeCategoryDidChange:) name:UIContentSizeCategoryDidChangeNotification object:nil];
 }
 
 - (void)dealloc {
@@ -578,7 +219,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     cell.textLabel.text = nil;
     cell.detailTextLabel.text = nil;
     cell.imageView.image = nil;
-    
     UIImageView *avatarImageView = [[UIImageView alloc] init];
     avatarImageView.translatesAutoresizingMaskIntoConstraints = NO;
     avatarImageView.layer.cornerRadius = 26;
@@ -586,46 +226,38 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     avatarImageView.contentMode = UIViewContentModeScaleAspectFill;
     avatarImageView.tag = 100;
     [cell.contentView addSubview:avatarImageView];
-    
     UILabel *nameLabel = [[UILabel alloc] init];
     nameLabel.translatesAutoresizingMaskIntoConstraints = NO;
     nameLabel.tag = 101;
     nameLabel.adjustsFontForContentSizeCategory = YES;
     [cell.contentView addSubview:nameLabel];
-    
     UILabel *usernameLabel = [[UILabel alloc] init];
     usernameLabel.translatesAutoresizingMaskIntoConstraints = NO;
     usernameLabel.tag = 102;
     usernameLabel.adjustsFontForContentSizeCategory = YES;
     [cell.contentView addSubview:usernameLabel];
-    
     UIImageView *devChevron = [[UIImageView alloc] init];
     devChevron.translatesAutoresizingMaskIntoConstraints = NO;
     devChevron.tag = 103;
     devChevron.contentMode = UIViewContentModeScaleAspectFit;
     [cell.contentView addSubview:devChevron];
-    
     [NSLayoutConstraint activateConstraints:@[
         [avatarImageView.leadingAnchor constraintEqualToAnchor:cell.contentView.leadingAnchor constant:20],
         [avatarImageView.centerYAnchor constraintEqualToAnchor:cell.contentView.centerYAnchor],
         [avatarImageView.widthAnchor constraintEqualToConstant:52],
         [avatarImageView.heightAnchor constraintEqualToConstant:52],
-        
         [nameLabel.leadingAnchor constraintEqualToAnchor:avatarImageView.trailingAnchor constant:12],
         [nameLabel.trailingAnchor constraintEqualToAnchor:devChevron.leadingAnchor constant:-12],
         [nameLabel.topAnchor constraintEqualToAnchor:cell.contentView.topAnchor constant:16],
-        
         [usernameLabel.leadingAnchor constraintEqualToAnchor:nameLabel.leadingAnchor],
         [usernameLabel.trailingAnchor constraintEqualToAnchor:devChevron.leadingAnchor constant:-12],
         [usernameLabel.topAnchor constraintEqualToAnchor:nameLabel.bottomAnchor constant:2],
         [usernameLabel.bottomAnchor constraintEqualToAnchor:cell.contentView.bottomAnchor constant:-16],
-        
         [devChevron.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-20],
         [devChevron.centerYAnchor constraintEqualToAnchor:cell.contentView.centerYAnchor],
         [devChevron.widthAnchor constraintEqualToConstant:18],
         [devChevron.heightAnchor constraintEqualToConstant:18]
     ]];
-    
     cell.backgroundColor = [BHDimPalette currentBackgroundColor];
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
 }
@@ -634,7 +266,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     UIImageView *avatarImageView = [cell.contentView viewWithTag:100];
     UILabel *nameLabel = [cell.contentView viewWithTag:101];
     UILabel *usernameLabel = [cell.contentView viewWithTag:102];
-    
     id fontGroup = [objc_getClass("TAEStandardFontGroup") sharedFontGroup];
     Class TAEColorSettingsCls = objc_getClass("TAEColorSettings");
     id settings = [TAEColorSettingsCls sharedSettings];
@@ -642,18 +273,14 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     id colorPalette = [currentPalette colorPalette];
     UIColor *textColor = [colorPalette performSelector:@selector(textColor)];
     UIColor *subtitleColor = [colorPalette performSelector:@selector(tabBarItemColor)];
-    
     nameLabel.text = developer[@"title"];
     nameLabel.font = [fontGroup performSelector:@selector(bodyBoldFont)];
     nameLabel.textColor = textColor;
-    
     usernameLabel.text = [NSString stringWithFormat:@"@%@", developer[@"username"]];
     usernameLabel.font = [fontGroup performSelector:@selector(subtext2Font)];
     usernameLabel.textColor = subtitleColor;
-    
     UIImageView *devChevron = [cell.contentView viewWithTag:103];
     devChevron.image = [UIImage tfn_vectorImageNamed:@"chevron_right" fitsSize:CGSizeMake(18, 18) fillColor:subtitleColor];
-    
     NSString *avatarURL = developer[@"avatarURL"];
     if (avatarURL.length > 0) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -725,9 +352,14 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 
 @end
 
-// ======================================================
-// MARK: - Twitter Blue Settings Page
-// ======================================================
+// ==============================
+// TwitterBlueSettingsViewController
+// ==============================
+@interface TwitterBlueSettingsViewController () <UITableViewDataSource, UITableViewDelegate>
+@property (nonatomic, strong) TFNTwitterAccount *account;
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSArray<NSDictionary *> *settings;
+@end
 
 @implementation TwitterBlueSettingsViewController
 
@@ -780,8 +412,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     ];
 }
 
-#pragma mark - UITableViewDataSource
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section { 
     return self.settings.count; 
 }
@@ -789,7 +419,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *settingData = self.settings[indexPath.row];
     NSString *type = settingData[@"type"];
-    
     if ([type isEqualToString:@"button"]) {
         ModernSettingsSimpleButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SimpleButtonCell" forIndexPath:indexPath];
         NSString *title = [[BHTBundle sharedBundle] localizedStringForKey:settingData[@"titleKey"]];
@@ -809,8 +438,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
         return cell;
     }
 }
-
-#pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -856,8 +483,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     return UITableViewAutomaticDimension;
 }
 
-#pragma mark - Actions
-
 - (void)switchChanged:(UISwitch *)sender {
     NSString *key = objc_getAssociatedObject(sender, @"prefKey");
     if (key) {
@@ -900,10 +525,14 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 
 @end
 
-
-// ======================================================
-// MARK: - Media Downloads Settings Page
-// ======================================================
+// ==============================
+// MediaDownloadsSettingsViewController
+// ==============================
+@interface MediaDownloadsSettingsViewController () <UITableViewDataSource, UITableViewDelegate>
+@property (nonatomic, strong) TFNTwitterAccount *account;
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSArray<NSDictionary *> *settings;
+@end
 
 @implementation MediaDownloadsSettingsViewController
 
@@ -955,8 +584,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     ];
 }
 
-#pragma mark - UITableViewDataSource
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section { 
     return self.settings.count; 
 }
@@ -975,8 +602,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     [cell addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
     return cell;
 }
-
-#pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -1009,8 +634,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     return UITableViewAutomaticDimension;
 }
 
-#pragma mark - Actions
-
 - (void)switchChanged:(UISwitch *)sender {
     NSString *key = objc_getAssociatedObject(sender, @"prefKey");
     if (key) {
@@ -1020,9 +643,14 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 
 @end
 
-// ======================================================
-// MARK: - Profiles Settings Page
-// ======================================================
+// ==============================
+// ProfilesSettingsViewController
+// ==============================
+@interface ProfilesSettingsViewController () <UITableViewDataSource, UITableViewDelegate>
+@property (nonatomic, strong) TFNTwitterAccount *account;
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSArray<NSDictionary *> *settings;
+@end
 
 @implementation ProfilesSettingsViewController
 
@@ -1076,8 +704,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     ];
 }
 
-#pragma mark - UITableViewDataSource
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section { 
     return self.settings.count; 
 }
@@ -1096,8 +722,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     [cell addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
     return cell;
 }
-
-#pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -1130,8 +754,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     return UITableViewAutomaticDimension;
 }
 
-#pragma mark - Actions
-
 - (void)switchChanged:(UISwitch *)sender {
     NSString *key = objc_getAssociatedObject(sender, @"prefKey");
     if (key) {
@@ -1141,10 +763,14 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 
 @end
 
-
-// ======================================================
-// MARK: - Tweets Settings Page (CLEANED - old_style removed)
-// ======================================================
+// ==============================
+// TweetsSettingsViewController (cleaned - old_style removed)
+// ==============================
+@interface TweetsSettingsViewController () <UITableViewDataSource, UITableViewDelegate>
+@property (nonatomic, strong) TFNTwitterAccount *account;
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSArray<NSDictionary *> *settings;
+@end
 
 @implementation TweetsSettingsViewController
 
@@ -1187,29 +813,18 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 
 - (void)buildSettingsList {
     self.settings = @[
-        // Tweet style and appearance
         @{ @"key": @"TweetToImage", @"titleKey": @"TWEET_TO_IMAGE_OPTION_TITLE", @"subtitleKey": @"TWEET_TO_IMAGE_OPTION_DETAIL_TITLE", @"default": @NO, @"type": @"toggle" },
-        
-        // Tweet interactions
         @{ @"key": @"like_con", @"titleKey": @"LIKE_CONFIRM_OPTION_TITLE", @"subtitleKey": @"LIKE_CONFIRM_OPTION_DETAIL_TITLE", @"default": @NO, @"type": @"toggle" },
         @{ @"key": @"tweet_con", @"titleKey": @"TWEET_CONFIRM_OPTION_TITLE", @"subtitleKey": @"TWEET_CONFIRM_OPTION_DETAIL_TITLE", @"default": @NO, @"type": @"toggle" },
-        
-        // Tweet display options
         @{ @"key": @"hide_view_count", @"titleKey": @"HIDE_VIEW_COUNT_OPTION_TITLE", @"subtitleKey": @"HIDE_VIEW_COUNT_OPTION_DETAIL_TITLE", @"default": @NO, @"type": @"toggle" },
         @{ @"key": @"hide_bookmark_button", @"titleKey": @"HIDE_MARKBOOK_BUTTON_OPTION_TITLE", @"subtitleKey": @"HIDE_MARKBOOK_BUTTON_OPTION_DETAIL_TITLE", @"default": @NO, @"type": @"toggle" },
         @{ @"key": @"disableSensitiveTweetWarnings", @"titleKey": @"DISABLE_SENSITIVE_TWEET_WARNINGS_OPTION_TITLE", @"subtitleKey": @"", @"default": @YES, @"type": @"toggle" },
         @{ @"key": @"hide_grok_analyze", @"titleKey": @"HIDE_GROK_ANALYZE_BUTTON_TITLE", @"subtitleKey": @"HIDE_GROK_ANALYZE_BUTTON_DETAIL_TITLE", @"default": @NO, @"type": @"toggle" },
-        
-        // Avatar and visual settings
         @{ @"key": @"square_avatars", @"titleKey": @"SQUARE_AVATARS_TITLE", @"subtitleKey": @"SQUARE_AVATARS_DETAIL_TITLE", @"default": @NO, @"type": @"toggle" },
-        
-        // Reply settings
         @{ @"key": @"reply_sorting_enabled", @"titleKey": @"REPLY_SORTING_TITLE", @"subtitleKey": @"REPLY_SORTING_DETAIL_TITLE", @"default": @NO, @"type": @"toggle" },
         @{ @"key": @"restore_reply_context", @"titleKey": @"RESTORE_REPLY_CONTEXT_TITLE", @"subtitleKey": @"RESTORE_REPLY_CONTEXT_DETAIL_TITLE", @"default": @NO, @"type": @"toggle" }
     ];
 }
-
-#pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section { 
     return self.settings.count; 
@@ -1229,8 +844,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     [cell addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
     return cell;
 }
-
-#pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -1263,13 +876,10 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     return UITableViewAutomaticDimension;
 }
 
-#pragma mark - Actions
-
 - (void)switchChanged:(UISwitch *)sender {
     NSString *key = objc_getAssociatedObject(sender, @"prefKey");
     if (key) {
         [[NSUserDefaults standardUserDefaults] setBool:sender.isOn forKey:key];
-        
         if ([key isEqualToString:@"square_avatars"]) {
             [self showRestartRequiredAlert:@"RESTART_REQUIRED_ALERT_MESSAGE_SQUARE_AVATARS"];
         }
@@ -1286,10 +896,14 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 
 @end
 
-
-// ======================================================
-// MARK: - Messages Settings Page
-// ======================================================
+// ==============================
+// MessagesSettingsViewController
+// ==============================
+@interface MessagesSettingsViewController () <UITableViewDataSource, UITableViewDelegate>
+@property (nonatomic, strong) TFNTwitterAccount *account;
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSArray<NSDictionary *> *settings;
+@end
 
 @implementation MessagesSettingsViewController
 
@@ -1341,8 +955,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     ];
 }
 
-#pragma mark - UITableViewDataSource
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section { 
     return self.settings.count; 
 }
@@ -1350,7 +962,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *settingData = self.settings[indexPath.row];
     NSString *type = settingData[@"type"];
-    
     if ([type isEqualToString:@"button"]) {
         ModernSettingsSimpleButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SimpleButtonCell" forIndexPath:indexPath];
         NSString *title = [[BHTBundle sharedBundle] localizedStringForKey:settingData[@"titleKey"]];
@@ -1370,8 +981,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
         return cell;
     }
 }
-
-#pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -1417,8 +1026,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     return UITableViewAutomaticDimension;
 }
 
-#pragma mark - Actions
-
 - (void)switchChanged:(UISwitch *)sender {
     NSString *key = objc_getAssociatedObject(sender, @"prefKey");
     if (key) {
@@ -1428,32 +1035,25 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 
 - (void)showCustomBackgroundOptions:(NSDictionary *)sender {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"NeoFreeBird" message:[[BHTBundle sharedBundle] localizedStringForKey:@"CUSTOM_DIRECT_BACKGROUND_VIEW_DETAIL_TITLE"] preferredStyle:UIAlertControllerStyleActionSheet];
-    
     if (alert.popoverPresentationController != nil) {
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.settings.count - 1 inSection:0]];
         alert.popoverPresentationController.sourceView = cell;
         alert.popoverPresentationController.sourceRect = cell.bounds;
     }
-    
     UIAlertAction *imageAction = [UIAlertAction actionWithTitle:[[BHTBundle sharedBundle] localizedStringForKey:@"CUSTOM_DIRECT_BACKGROUND_ALERT_OPTION_1"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self showImagePicker];
     }];
-    
     UIAlertAction *colorAction = [UIAlertAction actionWithTitle:[[BHTBundle sharedBundle] localizedStringForKey:@"CUSTOM_DIRECT_BACKGROUND_ALERT_OPTION_2"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self showColorPicker];
     }];
-    
     UIAlertAction *resetAction = [UIAlertAction actionWithTitle:[[BHTBundle sharedBundle] localizedStringForKey:@"CUSTOM_DIRECT_BACKGROUND_ALERT_OPTION_3"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self resetBackgroundCustomization];
     }];
-    
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:[[BHTBundle sharedBundle] localizedStringForKey:@"CANCEL_BUTTON_TITLE"] style:UIAlertActionStyleCancel handler:nil];
-    
     [alert addAction:imageAction];
     [alert addAction:colorAction];
     [alert addAction:resetAction];
     [alert addAction:cancel];
-    
     [self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -1476,24 +1076,26 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"change_msg_background"];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"background_image"];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"background_color"];
-    
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:[[BHTBundle sharedBundle] localizedStringForKey:@"RESET_COMPLETE_TITLE"] 
                                                                    message:[[BHTBundle sharedBundle] localizedStringForKey:@"BACKGROUND_RESET_MESSAGE"] 
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    
     [alert addAction:[UIAlertAction actionWithTitle:[[BHTBundle sharedBundle] localizedStringForKey:@"OK_BUTTON_TITLE"] 
                                               style:UIAlertActionStyleDefault 
                                             handler:nil]];
-    
     [self presentViewController:alert animated:YES completion:nil];
 }
 
 @end
 
-
-// ======================================================
-// MARK: - Experimental Settings Page
-// ======================================================
+// ==============================
+// ExperimentalSettingsViewController (cleaned - translate removed)
+// ==============================
+@interface ExperimentalSettingsViewController () <UITableViewDataSource, UITableViewDelegate>
+@property (nonatomic, strong) TFNTwitterAccount *account;
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSArray<NSDictionary *> *toggles;
+@property (nonatomic, strong) NSArray<NSDictionary *> *visibleToggles;
+@end
 
 @implementation ExperimentalSettingsViewController
 
@@ -1538,7 +1140,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 
 - (void)buildSettingsList {
     self.toggles = @[
-        // Tweet style and appearance
         @{ @"key": @"restore_tweet_labels", @"titleKey": @"ENABLE_TWEET_LABELS_OPTION_TITLE", @"subtitleKey": @"ENABLE_TWEET_LABELS_OPTION_DETAIL_TITLE", @"default": @NO, @"type": @"toggle" }
     ];
     [self updateVisibleToggles];
@@ -1562,8 +1163,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     self.visibleToggles = [visible copy];
 }
 
-#pragma mark - UITableViewDataSource
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section { 
     return self.visibleToggles.count; 
 }
@@ -1571,7 +1170,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *toggleData = self.visibleToggles[indexPath.row];
     NSString *type = toggleData[@"type"];
-    
     if ([type isEqualToString:@"compactButton"]) {
         ModernSettingsCompactButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CompactButtonCell" forIndexPath:indexPath];
         NSString *title = [[BHTBundle sharedBundle] localizedStringForKey:toggleData[@"titleKey"]];
@@ -1585,7 +1183,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
         }
         [cell configureWithTitle:title subtitle:subtitle];
         return cell;
-        
     } else if ([type isEqualToString:@"button"]) {
         ModernSettingsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ButtonCell" forIndexPath:indexPath];
         NSString *title = [[BHTBundle sharedBundle] localizedStringForKey:toggleData[@"titleKey"]];
@@ -1600,7 +1197,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
         NSString *iconName = toggleData[@"icon"];
         [cell configureWithTitle:title subtitle:subtitle iconName:iconName];
         return cell;
-
     } else {
         ModernSettingsToggleCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ToggleCell" forIndexPath:indexPath];
         NSString *title = [[BHTBundle sharedBundle] localizedStringForKey:toggleData[@"titleKey"]];
@@ -1615,8 +1211,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
         return cell;
     }
 }
-
-#pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -1662,13 +1256,10 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     return UITableViewAutomaticDimension;
 }
 
-#pragma mark - Actions
-
 - (void)switchChanged:(UISwitch *)sender {
     NSString *key = objc_getAssociatedObject(sender, @"prefKey");
     if (key) {
         [[NSUserDefaults standardUserDefaults] setBool:sender.isOn forKey:key];
-        
         if ([key isEqualToString:@"square_avatars"]) {
             [self showRestartRequiredAlert:@"RESTART_REQUIRED_ALERT_MESSAGE_SQUARE_AVATARS"];
         }
@@ -1685,9 +1276,15 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 
 @end
 
-// ======================================================
-// MARK: - General Settings Page
-// ======================================================
+// ==============================
+// GeneralSettingsViewController (cleaned - unused translate methods removed)
+// ==============================
+@interface GeneralSettingsViewController () <UITableViewDataSource, UITableViewDelegate, UIFontPickerViewControllerDelegate>
+@property (nonatomic, strong) TFNTwitterAccount *account;
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSArray<NSDictionary *> *toggles;
+@property (nonatomic, strong) NSArray<NSDictionary *> *visibleToggles;
+@end
 
 @implementation GeneralSettingsViewController
 
@@ -1772,8 +1369,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     self.visibleToggles = [visible copy];
 }
 
-#pragma mark - UITableViewDataSource
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section { 
     return self.visibleToggles.count; 
 }
@@ -1781,7 +1376,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *toggleData = self.visibleToggles[indexPath.row];
     NSString *type = toggleData[@"type"];
-    
     if ([type isEqualToString:@"compactButton"]) {
         ModernSettingsCompactButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CompactButtonCell" forIndexPath:indexPath];
         NSString *title = [[BHTBundle sharedBundle] localizedStringForKey:toggleData[@"titleKey"]];
@@ -1795,7 +1389,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
         }
         [cell configureWithTitle:title subtitle:subtitle];
         return cell;
-        
     } else if ([type isEqualToString:@"button"]) {
         ModernSettingsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ButtonCell" forIndexPath:indexPath];
         NSString *title = [[BHTBundle sharedBundle] localizedStringForKey:toggleData[@"titleKey"]];
@@ -1810,7 +1403,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
         NSString *iconName = toggleData[@"icon"];
         [cell configureWithTitle:title subtitle:subtitle iconName:iconName];
         return cell;
-
     } else {
         ModernSettingsToggleCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ToggleCell" forIndexPath:indexPath];
         NSString *title = [[BHTBundle sharedBundle] localizedStringForKey:toggleData[@"titleKey"]];
@@ -1825,8 +1417,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
         return cell;
     }
 }
-
-#pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -1872,15 +1462,11 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     return UITableViewAutomaticDimension;
 }
 
-#pragma mark - Actions
-
 - (void)updateAndAnimateChangesForKey:(NSString *)key {
     NSArray *oldVisibleToggles = self.visibleToggles;
     [self updateVisibleToggles];
     NSArray *newVisibleToggles = self.visibleToggles;
-
     [self.tableView beginUpdates];
-
     __block NSInteger toggleIndex = -1;
     [oldVisibleToggles enumerateObjectsUsingBlock:^(NSDictionary * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj[@"key"] isEqualToString:key]) {
@@ -1888,38 +1474,31 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
             *stop = YES;
         }
     }];
-
     if (toggleIndex == -1) {
         [self.tableView endUpdates];
         [self.tableView reloadData];
         return;
     }
-
     NSMutableArray *children = [NSMutableArray array];
     for (NSDictionary *toggleData in self.toggles) {
         if ([toggleData[@"parentKey"] isEqualToString:key]) {
             [children addObject:toggleData];
         }
     }
-
     if (children.count == 0) {
         [self.tableView endUpdates];
         return;
     }
-
     BOOL isAdding = newVisibleToggles.count > oldVisibleToggles.count;
-    
     NSMutableArray *indexPaths = [NSMutableArray array];
     for (int i = 0; i < children.count; i++) {
         [indexPaths addObject:[NSIndexPath indexPathForRow:toggleIndex + 1 + i inSection:0]];
     }
-
     if (isAdding) {
         [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
     } else {
         [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
     }
-
     [self.tableView endUpdates];
 }
 
@@ -1928,7 +1507,6 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     if (key) {
         [[NSUserDefaults standardUserDefaults] setBool:sender.isOn forKey:key];
         [self updateAndAnimateChangesForKey:key];
-
         if ([key isEqualToString:@"tab_bar_theming"]) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self refreshAllTabViewsWithTheming];
@@ -1941,19 +1519,14 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     }
 }
 
-// (refreshAllTabViewsWithTheming, refreshTabViewsWithThemingInView, refreshAllTabViews, refreshTabViewsInView methods remain unchanged)
-
 - (void)showURLHostSelectionViewController:(NSDictionary *)sender {
     NSIndexPath *indexPath = sender[@"indexPath"];
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"NeoFreeBird" message:@"URL" preferredStyle:UIAlertControllerStyleActionSheet];
-
     if (alert.popoverPresentationController != nil) {
         alert.popoverPresentationController.sourceView = cell;
         alert.popoverPresentationController.sourceRect = cell.bounds;
     }
-
     UIAlertAction *xHostAction = [UIAlertAction actionWithTitle:@"x.com" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [[NSUserDefaults standardUserDefaults] setObject:@"x.com" forKey:@"tweet_url_host"];
         if (indexPath) [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
@@ -1970,15 +1543,12 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
         [[NSUserDefaults standardUserDefaults] setObject:@"vxtwitter.com" forKey:@"tweet_url_host"];
         if (indexPath) [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     }];
-
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:[[BHTBundle sharedBundle] localizedStringForKey:@"CANCEL_BUTTON_TITLE"] style:UIAlertActionStyleCancel handler:nil];
-    
     [alert addAction:xHostAction];
     [alert addAction:twitterHostAction];
     [alert addAction:fxHostAction];
     [alert addAction:vxHostAction];
     [alert addAction:cancel];
-    
     [self presentViewController:alert animated:true completion:nil];
 }
 
@@ -1986,17 +1556,14 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     UIFontPickerViewControllerConfiguration *configuration = [[UIFontPickerViewControllerConfiguration alloc] init];
     [configuration setFilteredTraits:UIFontDescriptorClassMask];
     [configuration setIncludeFaces:NO];
-    
     UIFontPickerViewController *fontPicker = [[UIFontPickerViewController alloc] initWithConfiguration:configuration];
     fontPicker.delegate = (id<UIFontPickerViewControllerDelegate>)self;
     objc_setAssociatedObject(fontPicker, @"fontType", @"regular", OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
     if (self.account) {
         [fontPicker.navigationItem setTitleView:[objc_getClass("TFNTitleView") titleViewWithTitle:[[BHTBundle sharedBundle] localizedStringForKey:@"REQULAR_FONTS_PICKER_OPTION_TITLE"] subtitle:self.account.displayUsername]];
     } else {
         fontPicker.title = [[BHTBundle sharedBundle] localizedStringForKey:@"REQULAR_FONTS_PICKER_OPTION_TITLE"];
     }
-    
     [self.navigationController pushViewController:fontPicker animated:YES];
 }
 
@@ -2005,17 +1572,14 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     [configuration setIncludeFaces:YES];
     [configuration setFilteredTraits:UIFontDescriptorClassModernSerifs];
     [configuration setFilteredTraits:UIFontDescriptorClassMask];
-    
     UIFontPickerViewController *fontPicker = [[UIFontPickerViewController alloc] initWithConfiguration:configuration];
     fontPicker.delegate = (id<UIFontPickerViewControllerDelegate>)self;
     objc_setAssociatedObject(fontPicker, @"fontType", @"bold", OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
     if (self.account) {
         [fontPicker.navigationItem setTitleView:[objc_getClass("TFNTitleView") titleViewWithTitle:[[BHTBundle sharedBundle] localizedStringForKey:@"BOLD_FONTS_PICKER_OPTION_TITLE"] subtitle:self.account.displayUsername]];
     } else {
         fontPicker.title = [[BHTBundle sharedBundle] localizedStringForKey:@"BOLD_FONTS_PICKER_OPTION_TITLE"];
     }
-    
     [self.navigationController pushViewController:fontPicker animated:YES];
 }
 
@@ -2023,13 +1587,11 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     NSString *fontName = viewController.selectedFontDescriptor.fontAttributes[UIFontDescriptorNameAttribute];
     NSString *fontFamily = viewController.selectedFontDescriptor.fontAttributes[UIFontDescriptorFamilyAttribute];
     NSString *fontType = objc_getAssociatedObject(viewController, @"fontType");
-    
     if ([fontType isEqualToString:@"bold"]) {
         [[NSUserDefaults standardUserDefaults] setObject:fontName forKey:@"bhtwitter_font_2"];
     } else {
         [[NSUserDefaults standardUserDefaults] setObject:fontFamily forKey:@"bhtwitter_font_1"];
     }
-    
     [self updateVisibleToggles];
     [self.tableView reloadData];
     [viewController.navigationController popViewControllerAnimated:YES];
