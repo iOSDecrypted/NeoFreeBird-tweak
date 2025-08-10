@@ -1,4 +1,4 @@
-Package: com.neofreebird.bhtwitter
+Package: com.bandarhl.bhtwitter
 Name: NFB-BHTwitter
 Version: 5.1
 Architecture: iphoneos-arm
@@ -7,4 +7,4 @@ Maintainer: NeoFreeBird
 Author: NeoFreeBird
 Section: Tweaks
 Depends: mobilesubstrate, ws.hbang.common
-Conflicts: com.den.twigalaxy, xyz.cypwn.twigalaxy, com.bandarhl.bhtwitter, xyz.cypwn.bhtwitter, com.netskao.twitternoads, xyz.cypwn.bringbacktwitter
+Conflicts: com.den.twigalaxy, xyz.cypwn.twigalaxy, xyz.cypwn.bhtwitter, com.netskao.twitternoads, xyz.cypwn.bringbacktwitter
