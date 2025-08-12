@@ -2539,9 +2539,7 @@ static NSTimer *cookieRetryTimer = nil;
 }
 %end
 
-// --- Initialisation ---
-
-// MARK: Bird Icon Theming - Dirty hax for making the Nav Bird Icon themeable again.
+// MARK: Bird Icon Theming
 
 %hook UIImageView
 
@@ -2861,9 +2859,7 @@ static BOOL isViewInsideDashHostingController(UIView *view) {
     return NO;
 }
 
-
-
-// MARK: - Immersive Player Timestamp Visibility Control
+// MARK: - Immersive Player Timestamp
 
 %hook T1ImmersiveFullScreenViewController
 
@@ -3208,7 +3204,6 @@ static BOOL isViewInsideDashHostingController(UIView *view) {
 
 %end
 
-// --- UIImage Hook Implementation ---
 %hook UIImage
 
 // Hook the specific TFN rounding method
@@ -3467,9 +3462,6 @@ static char kManualRefreshInProgressKey;
     [TweetSourceHelper loadCachedCookies];
     
     %init;
-    // REMOVED: Observer for BHTClassicTabBarSettingChanged (and its new equivalent CLASSIC_TAB_BAR_DISABLED_NOTIFICATION_NAME)
-    // The logic for handling classic tab bar changes is now fully managed by restart.
-    
     // Add observers for both window and theme changes
     [[NSNotificationCenter defaultCenter] addObserverForName:UIWindowDidBecomeVisibleNotification 
                                                     object:nil 
@@ -4071,23 +4063,4 @@ static NSBundle *BHBundle() {
             self.tintColor = [UIColor blackColor];
         }
     }
-%end
-
-%hook T1ConversationActivitySummaryViewAdapter
-- (BOOL)isFocal {
-   return true;
-}
-- (void)setIsFocal:(BOOL)focal {
-   %orig(true);
-}
-%end
-
-%hook TTAActivitySummaryView
-- (BOOL)isFocal {
-   return true;
-}
-- (void)setIsFocal:(BOOL)focal {
-   %orig(true);
-}
-
 %end
