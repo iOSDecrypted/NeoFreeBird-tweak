@@ -2412,130 +2412,96 @@ static NSTimer *cookieRetryTimer = nil;
 
 %hook TFNAttributedTextView
 - (void)setTextModel:(TFNAttributedTextModel *)model {
-    if (![BHTManager RestoreTweetLabels] || !model || !model.attributedString) {
+    if (!model || !model.attributedString) {
         %orig(model);
         return;
     }
-
+    
     NSString *currentText = model.attributedString.string;
     NSMutableAttributedString *newString = nil;
     BOOL modified = NO;
-    
-    // Check if this text contains any of our cached source labels
-    if (tweetSources && [tweetSources count] > 0) {
-        for (NSString *sourceText in [tweetSources allValues]) {
-            if (sourceText && sourceText.length > 0 && ![sourceText isEqualToString:@""] && 
-                ![sourceText isEqualToString:@"Source Unavailable"] && [currentText containsString:sourceText]) {
+
+    // Prepare a helper to lazily create our mutable copy
+    void (^ensureNewString)(void) = ^{
+        if (!newString) {
+            newString = [[NSMutableAttributedString alloc] initWithAttributedString:model.attributedString];
+        }
+    };
+
+    // --- Tweet source label coloring (only if enabled) ---
+    if ([BHTManager RestoreTweetLabels] && tweetSources.count > 0) {
+        for (NSString *sourceText in tweetSources.allValues) {
+            if (sourceText.length > 0 &&
+                ![sourceText isEqualToString:@"Source Unavailable"] &&
+                [currentText containsString:sourceText]) {
                 
-                // Check if the source text is already colored to avoid redundant updates
                 NSRange sourceRange = [currentText rangeOfString:sourceText];
                 if (sourceRange.location != NSNotFound) {
-                    UIColor *existingColor = [model.attributedString attribute:NSForegroundColorAttributeName 
-                                                                       atIndex:sourceRange.location 
+                    UIColor *existingColor = [model.attributedString attribute:NSForegroundColorAttributeName
+                                                                       atIndex:sourceRange.location
                                                                 effectiveRange:NULL];
                     UIColor *accentColor = BHTCurrentAccentColor();
                     
-                    // Only apply coloring if it's not already colored with our accent color
                     if (!existingColor || ![existingColor isEqual:accentColor]) {
-                        newString = [[NSMutableAttributedString alloc] initWithAttributedString:model.attributedString];
-                        [newString addAttribute:NSForegroundColorAttributeName 
-                                           value:accentColor 
+                        ensureNewString();
+                        [newString addAttribute:NSForegroundColorAttributeName
+                                           value:accentColor
                                            range:sourceRange];
                         modified = YES;
                     }
-                    break;
                 }
+                break; // We only color the first matching source
             }
         }
     }
     
-    // Handle notification text replacements (your post -> your Tweet, etc.)
-    if ([currentText containsString:@"your post"] || [currentText containsString:@"your Post"] ||
-        [currentText containsString:@"reposted"] || [currentText containsString:@"Reposted"]) {
-            UIView *view = self;
-            BOOL isNotificationView = NO;
-            
-            // Walk up the view hierarchy to find notification context
-            while (view && !isNotificationView) {
-                if ([NSStringFromClass([view class]) containsString:@"Notification"] ||
-                    [NSStringFromClass([view class]) containsString:@"T1NotificationsTimeline"]) {
-                    isNotificationView = YES;
-                break;
-                }
-                view = view.superview;
+    // --- Notification text replacements (always enabled) ---
+    BOOL isNotificationView = NO;
+    {
+        UIView *view = self;
+        while (view && !isNotificationView) {
+            NSString *className = NSStringFromClass([view class]);
+            if ([className containsString:@"Notification"] ||
+                [className containsString:@"T1NotificationsTimeline"]) {
+                isNotificationView = YES;
             }
-            
-            // Only proceed if we're in a notification view
-            if (isNotificationView) {
-            if (!newString) {
-                newString = [[NSMutableAttributedString alloc] initWithAttributedString:model.attributedString];
-            }
-                
-                // Replace "your post" with "your Tweet"
-                NSRange postRange = [currentText rangeOfString:@"your post"];
-                if (postRange.location != NSNotFound) {
-                    NSDictionary *existingAttributes = [newString attributesAtIndex:postRange.location effectiveRange:NULL];
-                    [newString replaceCharactersInRange:postRange withString:@"your Tweet"];
-                    [newString setAttributes:existingAttributes range:NSMakeRange(postRange.location, [@"your Tweet" length])];
-                    modified = YES;
-                }
+            view = view.superview;
+        }
+    }
 
-                // Also check for capitalized "Post"
-                postRange = [currentText rangeOfString:@"your Post"];
-                if (postRange.location != NSNotFound) {
-                    NSDictionary *existingAttributes = [newString attributesAtIndex:postRange.location effectiveRange:NULL];
-                    [newString replaceCharactersInRange:postRange withString:@"your Tweet"];
-                    [newString setAttributes:existingAttributes range:NSMakeRange(postRange.location, [@"your Tweet" length])];
-                    modified = YES;
-                }
+    if (isNotificationView) {
+        NSDictionary *(^attrsAt)(NSUInteger) = ^NSDictionary *(NSUInteger idx) {
+            return [newString ?: model.attributedString attributesAtIndex:idx effectiveRange:NULL];
+        };
 
-                // Replace "a post" with "a Tweet"
-                postRange = [currentText rangeOfString:@"a post"];
-                if (postRange.location != NSNotFound) {
-                    NSDictionary *existingAttributes = [newString attributesAtIndex:postRange.location effectiveRange:NULL];
-                    [newString replaceCharactersInRange:postRange withString:@"a Tweet"];
-                    [newString setAttributes:existingAttributes range:NSMakeRange(postRange.location, [@"a Tweet" length])];
-                    modified = YES;
-                }
-
-                // Replace "a Post" with "a Tweet"
-                postRange = [currentText rangeOfString:@"a Post"];
-                if (postRange.location != NSNotFound) {
-                    NSDictionary *existingAttributes = [newString attributesAtIndex:postRange.location effectiveRange:NULL];
-                    [newString replaceCharactersInRange:postRange withString:@"a Tweet"];
-                    [newString setAttributes:existingAttributes range:NSMakeRange(postRange.location, [@"a Tweet" length])];
-                    modified = YES;
-                }
-                
-                
-                // Replace "reposted" with "retweeted"
-                NSRange repostRange = [currentText rangeOfString:@"reposted"];
-                if (repostRange.location != NSNotFound) {
-                    NSDictionary *existingAttributes = [newString attributesAtIndex:repostRange.location effectiveRange:NULL];
-                    [newString replaceCharactersInRange:repostRange withString:@"retweeted"];
-                    [newString setAttributes:existingAttributes range:NSMakeRange(repostRange.location, [@"retweeted" length])];
-                    modified = YES;
-                }
-                
-                // Also check for capitalized "Reposted"
-                repostRange = [currentText rangeOfString:@"Reposted"];
-                if (repostRange.location != NSNotFound) {
-                    NSDictionary *existingAttributes = [newString attributesAtIndex:repostRange.location effectiveRange:NULL];
-                    [newString replaceCharactersInRange:repostRange withString:@"Retweeted"];
-                    [newString setAttributes:existingAttributes range:NSMakeRange(repostRange.location, [@"Retweeted" length])];
-                    modified = YES;
+        NSArray *replacements = @[
+            @{@"old": @"your post", @"new": @"your Tweet"},
+            @{@"old": @"your Post", @"new": @"your Tweet"},
+            @{@"old": @"a post",    @"new": @"a Tweet"},
+            @{@"old": @"a Post",    @"new": @"a Tweet"},
+            @{@"old": @"reposted",  @"new": @"retweeted"},
+            @{@"old": @"Reposted",  @"new": @"Retweeted"}
+        ];
+        
+        for (NSDictionary *rep in replacements) {
+            NSRange r = [currentText rangeOfString:rep[@"old"]];
+            if (r.location != NSNotFound) {
+                ensureNewString();
+                NSDictionary *existingAttributes = attrsAt(r.location);
+                [newString replaceCharactersInRange:r withString:rep[@"new"]];
+                [newString setAttributes:existingAttributes range:NSMakeRange(r.location, [rep[@"new"] length])];
+                modified = YES;
             }
         }
     }
-    
-    // Apply the modified text model if we made any changes
+
+    // --- Apply modifications if needed ---
     if (modified && newString) {
-                    TFNAttributedTextModel *newModel = [[%c(TFNAttributedTextModel) alloc] initWithAttributedString:newString];
-                    %orig(newModel);
-        return;
+        TFNAttributedTextModel *newModel = [[%c(TFNAttributedTextModel) alloc] initWithAttributedString:newString];
+        %orig(newModel);
+    } else {
+        %orig(model);
     }
-    
-    %orig(model);
 }
 %end
 
