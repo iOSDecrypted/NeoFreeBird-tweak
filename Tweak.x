@@ -2479,7 +2479,7 @@ static NSTimer *cookieRetryTimer = nil;
                     [newString setAttributes:existingAttributes range:NSMakeRange(postRange.location, [@"your Tweet" length])];
                     modified = YES;
                 }
-                
+
                 // Also check for capitalized "Post"
                 postRange = [currentText rangeOfString:@"your Post"];
                 if (postRange.location != NSNotFound) {
@@ -2488,6 +2488,25 @@ static NSTimer *cookieRetryTimer = nil;
                     [newString setAttributes:existingAttributes range:NSMakeRange(postRange.location, [@"your Tweet" length])];
                     modified = YES;
                 }
+
+                // Replace "a post" with "a Tweet"
+                postRange = [currentText rangeOfString:@"a post"];
+                if (postRange.location != NSNotFound) {
+                    NSDictionary *existingAttributes = [newString attributesAtIndex:postRange.location effectiveRange:NULL];
+                    [newString replaceCharactersInRange:postRange withString:@"a Tweet"];
+                    [newString setAttributes:existingAttributes range:NSMakeRange(postRange.location, [@"a Tweet" length])];
+                    modified = YES;
+                }
+
+                // Replace "a Post" with "a Tweet"
+                postRange = [currentText rangeOfString:@"a Post"];
+                if (postRange.location != NSNotFound) {
+                    NSDictionary *existingAttributes = [newString attributesAtIndex:postRange.location effectiveRange:NULL];
+                    [newString replaceCharactersInRange:postRange withString:@"a Tweet"];
+                    [newString setAttributes:existingAttributes range:NSMakeRange(postRange.location, [@"a Tweet" length])];
+                    modified = YES;
+                }
+                
                 
                 // Replace "reposted" with "retweeted"
                 NSRange repostRange = [currentText rangeOfString:@"reposted"];
