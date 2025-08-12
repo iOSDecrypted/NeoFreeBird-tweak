@@ -2489,12 +2489,12 @@ static NSTimer *cookieRetryTimer = nil;
                     modified = YES;
                 }
                 
-                // Replace "reposted" with "Retweeted"
+                // Replace "reposted" with "retweeted"
                 NSRange repostRange = [currentText rangeOfString:@"reposted"];
                 if (repostRange.location != NSNotFound) {
                     NSDictionary *existingAttributes = [newString attributesAtIndex:repostRange.location effectiveRange:NULL];
-                    [newString replaceCharactersInRange:repostRange withString:@"Retweeted"];
-                    [newString setAttributes:existingAttributes range:NSMakeRange(repostRange.location, [@"Retweeted" length])];
+                    [newString replaceCharactersInRange:repostRange withString:@"retweeted"];
+                    [newString setAttributes:existingAttributes range:NSMakeRange(repostRange.location, [@"retweeted" length])];
                     modified = YES;
                 }
                 
