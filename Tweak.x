@@ -2465,28 +2465,38 @@ static NSTimer *cookieRetryTimer = nil;
     }
 
     if (isNotificationView) {
-        NSDictionary *(^attrsAt)(NSUInteger) = ^NSDictionary *(NSUInteger idx) {
-            return [newString ?: model.attributedString attributesAtIndex:idx effectiveRange:NULL];
-        };
+        if (!newString) {
+            newString = [[NSMutableAttributedString alloc] initWithAttributedString:model.attributedString];
+        }
 
         NSArray *replacements = @[
+            // Full phrase replacements first
+            @{@"old": @"Reposted your post", @"new": @"Retweeted your Tweet"},
+            @{@"old": @"Reposted your Post", @"new": @"Retweeted your Tweet"},
+            @{@"old": @"reposted your post", @"new": @"retweeted your Tweet"},
+            @{@"old": @"reposted your Post", @"new": @"retweeted your Tweet"},
+            
+            // Standalone "post" -> "Tweet"
             @{@"old": @"your post", @"new": @"your Tweet"},
             @{@"old": @"your Post", @"new": @"your Tweet"},
             @{@"old": @"a post",    @"new": @"a Tweet"},
             @{@"old": @"a Post",    @"new": @"a Tweet"},
+
+            // Standalone "reposted" -> "retweeted"
             @{@"old": @"reposted",  @"new": @"retweeted"},
             @{@"old": @"Reposted",  @"new": @"Retweeted"}
         ];
-        
+
+        NSString *mutableStringContent = newString.string;
         for (NSDictionary *rep in replacements) {
-            NSRange r = [currentText rangeOfString:rep[@"old"]];
-            if (r.location != NSNotFound) {
-                if (!newString) {
-                    newString = [[NSMutableAttributedString alloc] initWithAttributedString:model.attributedString];
-                }
-                NSDictionary *existingAttributes = attrsAt(r.location);
-                [newString replaceCharactersInRange:r withString:rep[@"new"]];
-                [newString setAttributes:existingAttributes range:NSMakeRange(r.location, [rep[@"new"] length])];
+            NSRange searchRange = [mutableStringContent rangeOfString:rep[@"old"]];
+            while (searchRange.location != NSNotFound) {
+                NSDictionary *existingAttributes = [newString attributesAtIndex:searchRange.location effectiveRange:NULL];
+                [newString replaceCharactersInRange:searchRange withString:rep[@"new"]];
+                [newString setAttributes:existingAttributes range:NSMakeRange(searchRange.location, [rep[@"new"] length])];
+                
+                mutableStringContent = newString.string; // Update after change
+                searchRange = [mutableStringContent rangeOfString:rep[@"old"]];
                 modified = YES;
             }
         }
