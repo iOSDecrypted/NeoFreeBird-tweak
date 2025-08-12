@@ -2421,13 +2421,6 @@ static NSTimer *cookieRetryTimer = nil;
     NSMutableAttributedString *newString = nil;
     BOOL modified = NO;
 
-    // Prepare a helper to lazily create our mutable copy
-    void (^ensureNewString)(void) = ^{
-        if (!newString) {
-            newString = [[NSMutableAttributedString alloc] initWithAttributedString:model.attributedString];
-        }
-    };
-
     // --- Tweet source label coloring (only if enabled) ---
     if ([BHTManager RestoreTweetLabels] && tweetSources.count > 0) {
         for (NSString *sourceText in tweetSources.allValues) {
@@ -2443,14 +2436,16 @@ static NSTimer *cookieRetryTimer = nil;
                     UIColor *accentColor = BHTCurrentAccentColor();
                     
                     if (!existingColor || ![existingColor isEqual:accentColor]) {
-                        ensureNewString();
+                        if (!newString) {
+                            newString = [[NSMutableAttributedString alloc] initWithAttributedString:model.attributedString];
+                        }
                         [newString addAttribute:NSForegroundColorAttributeName
                                            value:accentColor
                                            range:sourceRange];
                         modified = YES;
                     }
                 }
-                break; // We only color the first matching source
+                break; // Only color the first matching source
             }
         }
     }
@@ -2486,7 +2481,9 @@ static NSTimer *cookieRetryTimer = nil;
         for (NSDictionary *rep in replacements) {
             NSRange r = [currentText rangeOfString:rep[@"old"]];
             if (r.location != NSNotFound) {
-                ensureNewString();
+                if (!newString) {
+                    newString = [[NSMutableAttributedString alloc] initWithAttributedString:model.attributedString];
+                }
                 NSDictionary *existingAttributes = attrsAt(r.location);
                 [newString replaceCharactersInRange:r withString:rep[@"new"]];
                 [newString setAttributes:existingAttributes range:NSMakeRange(r.location, [rep[@"new"] length])];
