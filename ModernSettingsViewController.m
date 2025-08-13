@@ -664,7 +664,7 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
     
     UILabel *footerLabel = [[UILabel alloc] init];
     footerLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    footerLabel.text = @"NeoFreeBird v2.0 (release)\nNeoFreeBird-BHTwitter v5.1 (release)";
+    footerLabel.text = @"NeoFreeBird v2.0r2 (release)\nNeoFreeBird-BHTwitter v5.1 (release)";
     footerLabel.numberOfLines = 0;
     footerLabel.textAlignment = NSTextAlignmentLeft; // <-- Left aligned now
     
