@@ -1,8 +1,8 @@
 //
 //  BHTdownloadManager.m
-//  BHT
+//  BHTwitter
 //
-//  Created by BandarHelal on 24/12/1441 AH.
+//  Created by BandarHelal.
 //
 
 #import "BHTManager.h"
@@ -339,13 +339,8 @@
 }
 
 + (UIViewController *)BHTSettingsWithAccount:(TFNTwitterAccount *)twAccount {
-    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"enable_modern_layout"] boolValue]) {
-        ModernSettingsViewController *modernSettings = [[ModernSettingsViewController alloc] initWithAccount:twAccount];
-        return modernSettings;
-    } else {
-    SettingsViewController *pref = [[SettingsViewController alloc] initWithTwitterAccount:twAccount];
-    return pref;
-    }
+    // Always use ModernSettingsViewController now
+    return [[ModernSettingsViewController alloc] initWithAccount:twAccount];
 }
 
 // https://stackoverflow.com/a/45356575/9910699
