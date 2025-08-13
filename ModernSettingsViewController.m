@@ -1,3 +1,10 @@
+//
+//  ModernSettingsViewController.m
+//  NeoFreeBird
+//
+//  Created by BandarHelal on 25/11/2021.
+//
+
 #import "ModernSettingsViewController.h"
 #import "BHTBundle/BHTBundle.h"
 #import "BHDimPalette.h"

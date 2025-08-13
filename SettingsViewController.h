@@ -1,6 +1,6 @@
 //
-//  SettingsViewController.h
-//  FlexCrack
+//  SettingsViewController.h (legacy)
+//  NeoFreeBird
 //
 //  Created by BandarHelal on 25/11/2021.
 //

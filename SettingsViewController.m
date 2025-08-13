@@ -1,5 +1,5 @@
 //
-//  SettingsViewController.m
+//  SettingsViewController.m (legacy)
 //  NeoFreeBird
 //
 //  Created by BandarHelal

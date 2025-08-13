@@ -1,3 +1,10 @@
+//
+//  ModernSettingsViewController.h
+//  NeoFreeBird
+//
+//  Created by nyathea.
+//
+
 #import <UIKit/UIKit.h>
 #import "TWHeaders.h"
 
