@@ -305,7 +305,6 @@ static void batchSwizzlingOnClass(Class cls, NSArray<NSString*>*origSelectors, I
     if (![[NSUserDefaults standardUserDefaults] objectForKey:@"FirstRun_4.3"]) {
         [[NSUserDefaults standardUserDefaults] setValue:@"1strun" forKey:@"FirstRun_4.3"];
         [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"dw_v"];
-        [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"enable_modern_layout"];
         [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"hide_promoted"];
         [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"voice"];
         [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"undo_tweet"];
