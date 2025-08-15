@@ -912,6 +912,11 @@ PSSpecifier *photosVideosSection = [self newSectionWithTitle:[[BHTBundle sharedB
         [selectionSpecifier setProperty:@"vxtwitter.com" forKey:@"subtitle"];
         [self reloadSpecifiers];
     }];
+    UIAlertAction *fixvxHostAction = [UIAlertAction actionWithTitle:@"fixvx.com" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"fixvx.com" forKey:@"tweet_url_host"];
+        [selectionSpecifier setProperty:@"fixvx.com" forKey:@"subtitle"];
+        [self reloadSpecifiers];
+    }];
 
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:[[BHTBundle sharedBundle] localizedStringForKey:@"CANCEL_BUTTON_TITLE"] style:UIAlertActionStyleCancel handler:nil];
     
@@ -919,6 +924,7 @@ PSSpecifier *photosVideosSection = [self newSectionWithTitle:[[BHTBundle sharedB
     [alert addAction:twitterHostAction];
     [alert addAction:fxHostAction];
     [alert addAction:vxHostAction];
+    [alert addAction:fixvxHostAction];
     [alert addAction:cancel];
     
     [self presentViewController:alert animated:true completion:nil];

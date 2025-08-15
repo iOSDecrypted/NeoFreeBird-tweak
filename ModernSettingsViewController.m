@@ -2203,11 +2203,16 @@ static UIFont *TwitterChirpFont(TwitterFontStyle style) {
         [[NSUserDefaults standardUserDefaults] setObject:@"vxtwitter.com" forKey:@"tweet_url_host"];
         if (indexPath) [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     }];
+    UIAlertAction *fixvxHostAction = [UIAlertAction actionWithTitle:@"fixvx.com" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"fixvx.com" forKey:@"tweet_url_host"];
+        if (indexPath) [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:[[BHTBundle sharedBundle] localizedStringForKey:@"CANCEL_BUTTON_TITLE"] style:UIAlertActionStyleCancel handler:nil];
     [alert addAction:xHostAction];
     [alert addAction:twitterHostAction];
     [alert addAction:fxHostAction];
     [alert addAction:vxHostAction];
+    [alert addAction:fixvxHostAction];
     [alert addAction:cancel];
     [self presentViewController:alert animated:true completion:nil];
 }
