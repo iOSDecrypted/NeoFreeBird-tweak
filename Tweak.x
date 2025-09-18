@@ -2484,6 +2484,10 @@ static NSTimer *cookieRetryTimer = nil;
             @{@"old": @"new Post",    @"new": @"new Tweet"},
             @{@"old": @"New post",    @"new": @"New Tweet"},
             @{@"old": @"New Post",    @"new": @"New Tweet"},
+            @{@"old": @"recent post",    @"new": @"recent Tweet"},
+            @{@"old": @"recent Post",    @"new": @"recent Tweet"},
+            @{@"old": @"Recent post",    @"new": @"Recent Tweet"},
+            @{@"old": @"Recent Post",    @"new": @"Recent Tweet"},
 
             // Standalone "reposted" -> "retweeted"
             @{@"old": @"reposted",  @"new": @"retweeted"},
