@@ -15,8 +15,8 @@
 "RESTART_NOW_BUTTON_TITLE" = "再起動";
 "MODERN_LAYOUT_RESTART_MESSAGE" = "古いレイアウトと新しいレイアウトを切り替えるには、Twitterを再起動する必要があります";
 
-"RESET_COMPLETE_TITLE" = "背景をリセットしました";
-"BACKGROUND_RESET_MESSAGE" = "背景をTwitterのデフォルトにリセットしました。";
+"RESET_COMPLETE_TITLE" = "リセットしました";
+"BACKGROUND_RESET_MESSAGE" = "ダイレクトメッセージの背景がデフォルトにリセットされました。";
 
 "CONFIRM_ALERT_MESSAGE" = "続行しますか？";
 "YES_BUTTON_TITLE" = "はい";
@@ -48,9 +48,9 @@
 "ALWAYS_OPEN_SAFARI_OPTION_TITLE" = "外部ブラウザを使用";
 "ALWAYS_OPEN_SAFARI_OPTION_DETAIL_TITLE" = "Safariまたはデフォルトのブラウザでリンクを開きます。";
 
-"STRIP_URL_TRACKING_PARAMETERS_TITLE" = "リンクのカスタマイズ";
+"STRIP_URL_TRACKING_PARAMETERS_TITLE" = "カスタムリンクURL";
 "STRIP_URL_TRACKING_PARAMETERS_DETAIL_TITLE" = "リンクのカスタムURLを選択し、トラッキングを削除します。";
-"SELECT_URL_HOST_AFTER_COPY_OPTION_TITLE" = "カスタムURLを選択";
+"SELECT_URL_HOST_AFTER_COPY_OPTION_TITLE" = "ドメインを選択";
 
 "DISABLE_XCHAT_OPTION_TITLE" = "チャットを無効化";
 "DISABLE_XCHAT_OPTION_DETAIL_TITLE" = "サイドバーにある [チャット] ボタンを非表示にします。";
@@ -66,7 +66,7 @@
 "TWEET_TO_IMAGE_OPTION_DETAIL_TITLE" = "[共有] を長押しすると、ツイートを画像としてエクスポートできます。";
 
 "ENABLE_TWEET_LABELS_OPTION_TITLE" = "ツイートのソースラベルを表示 (ベータ版)";
-"ENABLE_TWEET_LABELS_OPTION_DETAIL_TITLE" = "どのクライアントからツイートされたのかを表示します。";
+"ENABLE_TWEET_LABELS_OPTION_DETAIL_TITLE" = "どのクライアントからツイートされたかを表示します。";
 
 "LIKE_CONFIRM_OPTION_TITLE" = "いいねの確認";
 "LIKE_CONFIRM_OPTION_DETAIL_TITLE" = "ツイートに「いいね」する前に確認ダイアログを表示します。";
@@ -377,7 +377,7 @@
 "MODERN_SETTINGS_EXPERIMENTAL_TITLE" = "実験的機能";
 "MODERN_SETTINGS_EXPERIMENTAL_SUBTITLE" = "現在テスト中の機能をお試しください。";
 
-"SPECIAL_THANKS_SECTION_HEADER_TITLE" = "謝辞";
-"FOLLOW_OFFICIAL_PAGE_SECTION_HEADER_TITLE" = "私たちをフォロー";
+"SPECIAL_THANKS_SECTION_HEADER_TITLE" = "特別な感謝";
+"FOLLOW_OFFICIAL_PAGE_SECTION_HEADER_TITLE" = "NeoFreeBirdをフォロー";
 
 "MODERN_SETTINGS_PLACEHOLDER_TEXT" = "ここには何もありません。";
