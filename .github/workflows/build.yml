@@ -110,7 +110,7 @@ jobs:
           echo "$BHTWITTER_VERSION"
 
       - name: Prepare X iPA
-        if: inputs.deploy_format == 'sideloaded' || inputs.deploy_format == 'trollstore'
+        if: inputs.deploy_format == 'trollstore'
         run: |
           wget "$IPA_URL" --no-verbose -O main/packages/com.atebits.Tweetie2.ipa
           unzip -q main/packages/com.atebits.Tweetie2.ipa -d main/tmp
@@ -131,13 +131,13 @@ jobs:
           THEOS: ${{ github.workspace }}/theos
 
       - name: Rename IPA to include IPA version
-        if: inputs.deploy_format == 'sideloaded' || inputs.deploy_format == 'trollstore'
+        if: inputs.deploy_format == 'trollstore'
         run: |
           mv "main/packages/$(ls -t main/packages | head -n1)" \
              "main/packages/NeoFreeBird-${{ inputs.deploy_format }}_${{ env.BHTWITTER_VERSION }}_${{ env.X_VERSION }}.${IPA_EXT}"
         env:
-          IPA_EXT: ${{ inputs.deploy_format == 'trollstore' && 'tipa' || 'ipa' }}
-
+          IPA_EXT: tipa
+          
       - name: Pass package name
         id: package_name
         run: |
