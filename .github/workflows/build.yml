@@ -160,5 +160,5 @@ jobs:
         with:
           tag_name: v${{ env.BHTWITTER_VERSION }}
           name: v${{ env.BHTWITTER_VERSION }} - BHTwitter
-          files: main/packages/${{ steps.package_name.outputs.package }}
+          files: ${{ inputs.deploy_format == 'sideloaded' && format('main/packages/{0}', steps.package_name.outputs.package) || format('main/packages/NeoFreeBird-{0}_{1}_{2}.{3}', inputs.deploy_format, env.BHTWITTER_VERSION, env.X_VERSION, inputs.deploy_format == 'trollstore' && 'tipa' || 'ipa') }}
           draft: true
